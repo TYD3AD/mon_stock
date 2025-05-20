@@ -1,10 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Stock de l\'antenne de ') }} {{ $antenne->nom }}
+            {{ __('Stock pharmacie de ') }} {{ $antenne->nom }}
         </h2>
 
     </x-slot>
+
+
 
     <div class="py-6 px-4 sm:px-6 lg:px-8">
         <div class="overflow-x-auto">

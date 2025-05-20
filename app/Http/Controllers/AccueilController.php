@@ -33,6 +33,10 @@ class AccueilController extends Controller
                 return $stock;
             });
 
+        foreach ($stocks as $stock) {
+            $stock ? \Carbon\Carbon::parse($stock->date_peremption)->format('d/m/Y') : '—';
+        }
+
         return view('accueil', compact('stocks'));
     }
 }

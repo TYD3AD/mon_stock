@@ -9,6 +9,16 @@ export default {
         './resources/views/**/*.blade.php',
     ],
 
+    safelist: [
+        'bg-black',
+        'text-white',
+        'bg-red',
+        'bg-red-600',
+        'text-orange-800',
+        'text-yellow-800',
+        'bg-green-600',
+    ],
+
     theme: {
         extend: {
             fontFamily: {
@@ -19,3 +29,4 @@ export default {
 
     plugins: [forms],
 };
+

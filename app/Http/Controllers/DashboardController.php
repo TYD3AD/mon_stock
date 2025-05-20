@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Antenne;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Stock;
 
@@ -16,6 +17,12 @@ class DashboardController extends Controller
             $query->where('antenne_id', $user->antenne_id);
         })->with(['produit', 'zoneStock'])->get();
 
-        return view('dashboard', compact('stocks'));
+        foreach ($stocks as $stock) {
+            $stock ? \Carbon\Carbon::parse($stock->date_peremption)->format('d/m/Y') : '—';
+        }
+
+        $antenne = auth()->user()->antenne;
+
+        return view('dashboard', compact('stocks', 'antenne'));
     }
 }
