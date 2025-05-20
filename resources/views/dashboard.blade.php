@@ -15,15 +15,22 @@
                     <th class="px-4 py-2 border">Zone</th>
                     <th class="px-4 py-2 border">Quantité</th>
                     <th class="px-4 py-2 border">Date de péremption</th>
+                    <th class="px-4 py-2 border">Modification</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($stocks as $stock)
-                    <tr class="border-b @include('components.tailwind-class', ['status' => $stock->getStatus()])">
-                        <td class="border px-4 py-2">{{ $stock->produit->nom }}</td>
-                        <td class="border px-4 py-2">{{ $stock->zoneStock->nom }}</td>
-                        <td class="border px-4 py-2">{{ $stock->quantite }}</td>
-                        <td class="border px-4 py-2">{{ $stock->date_peremption->format('d/m/Y') }}</td>
+                @foreach ($produits as $produit)
+                    <tr class="border-b @include('components.tailwind-class', ['status' => $produit->getStatus()])">
+                        <td class="border px-4 py-2">{{ $produit->typeProduit->nom }}</td>
+                        <td class="border px-4 py-2">{{ $produit->zoneStock->nom }}</td>
+                        <td class="border px-4 py-2">{{ $produit->quantite }}</td>
+                        <td class="border px-4 py-2">{{ $produit->date_peremption->format('d/m/Y') }}</td>
+                        <td class="border px-4 py-2 text-center">
+                            <a href="{{ route('produit.edit', $produit) }}"
+                               class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded">
+                                Modifier
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>

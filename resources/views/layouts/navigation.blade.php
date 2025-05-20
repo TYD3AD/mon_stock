@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <img src="img/logo-protec.svg" alt="Logo Protection Civile" class="h-14 w-14">
+                        <img src="/img/logo-protec.svg" alt="Logo Protection Civile" class="h-14 w-14">
                     </a>
                 </div>
 

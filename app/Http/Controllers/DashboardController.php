@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Antenne;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Stock;
+use App\Models\Produits;
 
 class DashboardController extends Controller
 {
@@ -13,16 +13,16 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         // Récupérer tous les stocks des zones liées à l’antenne de l’utilisateur
-        $stocks = Stock::whereHas('zoneStock', function ($query) use ($user) {
+        $produits = Produits::whereHas('zoneStock', function ($query) use ($user) {
             $query->where('antenne_id', $user->antenne_id);
-        })->with(['produit', 'zoneStock'])->get();
+        })->with(['typeProduit', 'zoneStock'])->get();
 
-        foreach ($stocks as $stock) {
-            $stock ? \Carbon\Carbon::parse($stock->date_peremption)->format('d/m/Y') : '—';
+        foreach ($produits as $produit) {
+            $produit ? \Carbon\Carbon::parse($produit->date_peremption)->format('d/m/Y') : '—';
         }
 
         $antenne = auth()->user()->antenne;
 
-        return view('dashboard', compact('stocks', 'antenne'));
+        return view('dashboard', compact('produits', 'antenne'));
     }
 }

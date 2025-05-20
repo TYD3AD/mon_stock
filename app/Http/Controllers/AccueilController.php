@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Stock;
+use App\Models\Produits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -13,30 +13,30 @@ class AccueilController extends Controller
     {
         $aujourdHui = Carbon::today();
 
-        $stocks = Stock::with(['produit', 'zoneStock'])
+        $produits = Produits::with(['type_prozdzddduit', 'zoneStock'])
             ->whereNotNull('date_peremption')
             ->orderBy('date_peremption')
             ->get()
-            ->map(function ($stock) use ($aujourdHui) {
-                $diff = $aujourdHui->diffInDays(Carbon::parse($stock->date_peremption), false);
+            ->map(function ($produit) use ($aujourdHui) {
+                $diff = $aujourdHui->diffInDays(Carbon::parse($produit->date_peremption), false);
 
                 if ($diff < 0) {
-                    $stock->couleur = 'noir'; // périmé
+                    $produit->couleur = 'noir'; // périmé
                 } elseif ($diff <= 15) {
-                    $stock->couleur = 'rouge';
+                    $produit->couleur = 'rouge';
                 } elseif ($diff <= 60) {
-                    $stock->couleur = 'jaune';
+                    $produit->couleur = 'jaune';
                 } else {
-                    $stock->couleur = 'vert';
+                    $produit->couleur = 'vert';
                 }
 
-                return $stock;
+                return $produit;
             });
 
-        foreach ($stocks as $stock) {
-            $stock ? \Carbon\Carbon::parse($stock->date_peremption)->format('d/m/Y') : '—';
+        foreach ($produits as $produit) {
+            $produit ? \Carbon\Carbon::parse($produit->date_peremption)->format('d/m/Y') : '—';
         }
 
-        return view('accueil', compact('stocks'));
+        return view('accueil', compact('produits'));
     }
 }

@@ -20,12 +20,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($stocks as $stock)
-                    <tr class="border-b @include('components.tailwind-class', ['status' => $stock->getStatus()])">
-                        <td class="border px-4 py-2">{{ $stock->produit->nom }}</td>
-                        <td class="border px-4 py-2">{{ $stock->zoneStock->nom }}</td>
-                        <td class="border px-4 py-2">{{ $stock->quantite }}</td>
-                        <td class="border px-4 py-2">{{ $stock->date_peremption->format('d/m/Y') }}</td>
+                @foreach ($produits as $produit)
+                    <tr class="border-b @include('components.tailwind-class', ['status' => $produit->getStatus()])">
+                        <td class="border px-4 py-2">{{ $produit->typeProduit->nom }}</td>
+                        <td class="border px-4 py-2">{{ $produit->zoneStock->nom }}</td>
+                        <td class="border px-4 py-2">{{ $produit->quantite }}</td>
+                        <td class="border px-4 py-2">{{ $produit->date_peremption->format('d/m/Y') }}</td>
                     </tr>
                 @endforeach
                 </tbody>

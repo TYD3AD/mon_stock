@@ -13,7 +13,7 @@ class Antenne extends Model
 
     public function zonesStock()
     {
-        return $this->hasMany(ZoneStock::class);
+        return $this->hasMany(TypeProduit::class);
     }
 
     public function users()
