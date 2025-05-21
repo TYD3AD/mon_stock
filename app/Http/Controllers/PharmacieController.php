@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produits;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PharmacieController extends Controller
 {
@@ -25,29 +26,28 @@ class PharmacieController extends Controller
     }
 
     /**
-     * Affiche le formulaire d'édition d'un stock de la pharmacie.
-     */
-    public function edit($id)
-    {
-        $stock = Produits::with(['prtype_prozdzddduitoduit', 'zoneStock'])->findOrFail($id);
-        return view('pharmacie.edit', compact('stock'));
-    }
-
-    /**
      * Met à jour les informations d’un stock de la pharmacie.
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'quantite' => 'required|integer|min:0',
-            'date_peremption' => 'required|date',
-        ]);
+        try {
+            $request->validate([
+                'quantite' => 'required|integer|min:0',
+                'date_peremption' => 'required|date',
+            ]);
 
-        $stock = Produits::findOrFail($id);
-        $stock->quantite = $request->input('quantite');
-        $stock->date_peremption = $request->input('date_peremption');
-        $stock->save();
+            $stock = Produits::findOrFail($id);
+            $stock->quantite = $request->input('quantite');
+            $stock->date_peremption = $request->input('date_peremption');
+            $stock->save();
 
-        return redirect()->route('pharmacie.index')->with('success', 'Stock mis à jour avec succès.');
+            // Redirige vers la précédente page avec un message de succès
+            return redirect()->back()->with('success', 'Le stock a été mis à jour avec succès.');
+        }
+        catch (\Exception $e) {
+            // Redirige vers la précédente page avec un message d'erreur
+            log::error('Erreur lors de la mise à jour du produit : ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Une erreur est survenue lors de la mise à jour du produit.<br>Veuillez contacter l\'administrateur.');
+        }
     }
 }
