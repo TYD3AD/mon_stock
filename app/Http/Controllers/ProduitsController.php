@@ -12,6 +12,48 @@ use function PHPSTORM_META\type;
 
 class ProduitsController
 {
+
+    public function create()
+    {
+        $zonesStock = ZoneStock::all();
+        $typesProduits = TypeProduit::all();
+
+        return view('produit-create', compact('zonesStock', 'typesProduits'));
+    }
+
+
+    public function store(Request $request)
+    {
+
+        try {
+            $request->validate([
+                'produits.*.produit_id' => 'required|exists:type_produit,id',
+                'produits.*.zone_stock_id' => 'required|exists:zone_stocks,id',
+                'produits.*.quantite' => 'required|integer|min:0',
+                'produits.*.date_peremption' => 'required|date',
+            ]);
+            foreach ($request->input('produits') as $produitData) {
+                Produits::create([
+                    'produit_id' => $produitData['produit_id'],
+                    'zone_stock_id' => $produitData['zone_stock_id'],
+                    'quantite' => $produitData['quantite'],
+                    'date_peremption' => $produitData['date_peremption'],
+                    // ajouter autres champs nécessaires ici (ex: type_produit_id)
+                ]);
+            }// redirige vers le dashboard
+            return redirect()->route('dashboard')->with('success', 'Les produits ont été ajoutés avec succès.');
+        } catch (\Exception $e) {
+            // Redirige vers la précédente page avec un message d'erreur
+            Log::error('Erreur lors de l\'ajout des produits', [
+                'message' => $e->getMessage(),
+                'request' => $request->all()
+            ]);
+            return redirect()->back()->with('error', 'Une erreur est survenue lors de l\'ajout des produits.<br>Veuillez contacter l\'administrateur.');
+        }
+    }
+
+
+
     public function edit($id)
     {
         $produit = Produits::with(['typeProduit', 'zoneStock'])->findOrFail($id);

@@ -23,10 +23,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/pharmacie', [PharmacieController::class, 'index'])->name('pharmacie.index');
     Route::post('/pharmacie', [PharmacieController::class, 'index'])->name('pharmacie.index');
 
+    Route::get('/produits/create', [ProduitsController::class, 'create'])->name('produit.create');
+    Route::post('/produits/store', [ProduitsController::class, 'store'])->name('produit.store');
     Route::get('/produits/{produit}/edit', [ProduitsController::class, 'edit'])->name('produit.edit');
     Route::put('/produits/{id}/update', [ProduitsController::class, 'update'])->name('produits.update');
-    Route::get('/produits/{produit}/update', [ProduitsController::class, 'update'])->name('produit.update');
-
+    Route::get('/produits/{produit}/update', [ProduitsController::class, 'update'])->name('produit.update'); // à supprimer ?
+    
 });
 
 require __DIR__.'/auth.php';

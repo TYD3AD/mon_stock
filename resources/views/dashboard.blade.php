@@ -6,6 +6,14 @@
 
     </x-slot>
 
+    <div>
+        {{-- Bouton ajout de produit --}}
+        <div class="flex justify-end py-4 pt-10 px-4 sm:px-6 lg:px-8">
+            <a href="{{ route('produit.create') }}"
+               class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 mr-12 rounded">
+                Ajout de produits
+            </a>
+    </div>
     <div class="py-6 px-4 sm:px-6 lg:px-8">
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-300">
