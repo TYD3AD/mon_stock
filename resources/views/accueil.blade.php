@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mon stock</title>
+    <title>Mon Stock</title>
     <style>
         .rouge { background-color: #f8d7da; }
         .jaune { background-color: #fff3cd; }
@@ -18,7 +18,7 @@
 
 <header>
     <nav>
-        <a href="{{ route('accueil') }}">Mon stock</a>
+        <a href="{{ route('accueil') }}">Mon Stock</a>
         <a href="#">Consommables opérationnels</a>
         <a href="#">Ma pharmacie</a>
     </nav>
