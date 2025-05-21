@@ -34,10 +34,10 @@ class Produits extends Model
     // Constantes des seuils en jours
     public const SEUILS = [
         'perime' => 0,
-        'tres_proche' => 3,
-        'proche' => 7,
-        'correcte' => 30,
-        'loin' => 31
+        'tres_proche' => 14,
+        'proche' => 30,
+        'correcte' => 60,
+        'loin' => 61
     ];
 
     // Méthode pour récupérer la classe CSS en fonction de la date de péremption

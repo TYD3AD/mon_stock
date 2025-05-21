@@ -6,7 +6,7 @@
         //'tres_proche' => 3
         'tres_proche' => 'bg-red-600 text-white font-bold',
         //'proche' => 7
-        'proche' => 'bg-orange-500 text-white font-bold',
+        'proche' => 'bg-orange-400 text-black font-bold',
         //'correcte' => 30
         'correcte' => 'bg-yellow-400 text-black font-bold',
         //'loin' => 31
