@@ -18,6 +18,6 @@ class Antenne extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class, 'acces_antenne', 'id_antenne', 'id_user');
     }
 }

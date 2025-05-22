@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/produits/{produit}/delete', [ProduitsController::class, 'delete'])->name('produit.delete');
     Route::put('/produits/{id}/update', [ProduitsController::class, 'update'])->name('produits.update');
     Route::get('/produits/{produit}/update', [ProduitsController::class, 'update'])->name('produit.update'); // à supprimer ?
-    
+
 });
 
 require __DIR__.'/auth.php';
