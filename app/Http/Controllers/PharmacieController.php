@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produits;
+use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -14,7 +14,7 @@ class PharmacieController extends Controller
     public function index()
     {
         // Filtre les produits stockés dans la zone "Pharmacie"
-        $produits = Produits::with(['typeProduit', 'zoneStock']) // <== ici
+        $produits = Produit::with(['typeProduit', 'zoneStock']) // <== ici
         ->whereHas('zoneStock', function ($query) {
             $query->where('nom', 'Pharmacie');
         })
@@ -36,7 +36,7 @@ class PharmacieController extends Controller
                 'date_peremption' => 'required|date',
             ]);
 
-            $stock = Produits::findOrFail($id);
+            $stock = Produit::findOrFail($id);
             $stock->quantite = $request->input('quantite');
             $stock->date_peremption = $request->input('date_peremption');
             $stock->save();

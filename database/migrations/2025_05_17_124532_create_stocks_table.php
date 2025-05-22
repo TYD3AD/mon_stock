@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('stocks', function (Blueprint $table) {
+        Schema::create('produits', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('produit_id')->constrained('produits')->onDelete('cascade');
-            $table->foreignId('zone_stock_id')->constrained('zone_stocks')->onDelete('cascade');
+            $table->foreignId('type_produit_id')->constrained('produits')->onDelete('cascade');
+            $table->foreignId('zone_stock_id')->constrained('zones_stocks')->onDelete('cascade');
             $table->unsignedSmallInteger('quantite');
             $table->date('date_peremption')->nullable();
             $table->timestamps();

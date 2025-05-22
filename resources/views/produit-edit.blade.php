@@ -19,7 +19,7 @@
                 <select name="type_produit_id" class="w-full border rounded px-3 py-2">
                     <option value="">Sélectionner un produit</option>
                     @foreach($typeProduits as $type)
-                        <option value="{{ $type->id }}" {{ $produit->produit_id == $type->id ? 'selected' : '' }}>
+                        <option value="{{ $type->id }}" {{ $produit->type_produit_id == $type->id ? 'selected' : '' }}>
                             {{ $type->nom }}
                         </option>
                     @endforeach

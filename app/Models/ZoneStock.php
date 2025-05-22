@@ -9,15 +9,17 @@ class ZoneStock extends Model
 {
     use HasFactory;
 
+    protected $table = 'zones_stocks';
+
     protected $fillable = ['nom', 'antenne_id'];
 
-    public function antenne()
+    public function antennes()
     {
         return $this->belongsTo(Antenne::class);
     }
 
-    public function stocks()
+    public function produits()
     {
-        return $this->hasMany(Stock::class);
+        return $this->hasMany(Produit::class, 'zone_stock_id');
     }
 }

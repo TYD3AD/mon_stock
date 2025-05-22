@@ -11,7 +11,7 @@ class Antenne extends Model
 
     protected $fillable = ['nom'];
 
-    public function zonesStock()
+    public function typesProduits()
     {
         return $this->hasMany(TypeProduit::class);
     }

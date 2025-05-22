@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produits;
+use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -13,7 +13,7 @@ class AccueilController extends Controller
     {
         $aujourdHui = Carbon::today();
 
-        $produits = Produits::with(['type_prozdzddduit', 'zoneStock'])
+        $produits = Produit::with(['type_prozdzddduit', 'zoneszzzStocks'])
             ->whereNotNull('date_peremption')
             ->orderBy('date_peremption')
             ->get()

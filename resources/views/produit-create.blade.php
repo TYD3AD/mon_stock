@@ -1,5 +1,5 @@
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-<x-app-layout>
+4<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Ajout de produits') }}
@@ -90,7 +90,7 @@
                         </td>
 
                         <!-- Input caché produit_id indispensable -->
-                        <input type="hidden" :name="`produits[${index}][produit_id]`" :value="produit.id">
+                        <input type="hidden" :name="`produits[${index}][type_produit_id]`" :value="produit.id">
 
 
                         <td class="border border-gray-300 px-2 py-1 text-center">

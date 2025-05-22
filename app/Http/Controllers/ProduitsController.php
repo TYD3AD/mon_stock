@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produits;
+use App\Models\Produit;
 use App\Models\TypeProduit;
 use App\Models\ZoneStock;
 use Illuminate\Http\Request;
@@ -15,7 +15,9 @@ class ProduitsController
 
     public function create()
     {
-        $zonesStock = ZoneStock::all();
+        // récupère toutes les zones de stock liés à l'antenne de l'utilisateur
+        $zonesStock = ZoneStock::where('antenne_id', auth()->user()->antenne_id)->get();
+
         $typesProduits = TypeProduit::all();
 
         return view('produit-create', compact('zonesStock', 'typesProduits'));
@@ -24,40 +26,47 @@ class ProduitsController
 
     public function store(Request $request)
     {
-
         try {
-            $request->validate([
-                'produits.*.produit_id' => 'required|exists:type_produit,id',
-                'produits.*.zone_stock_id' => 'required|exists:zone_stocks,id',
+            // Validation
+            $validated = $request->validate([
+                'produits' => 'required|array|min:1',
+                'produits.*.type_produit_id' => 'required|exists:types_produits,id',
+                'produits.*.zone_stock_id' => 'required|exists:zones_stocks,id',
                 'produits.*.quantite' => 'required|integer|min:0',
                 'produits.*.date_peremption' => 'required|date',
             ]);
-            foreach ($request->input('produits') as $produitData) {
-                Produits::create([
-                    'produit_id' => $produitData['produit_id'],
-                    'zone_stock_id' => $produitData['zone_stock_id'],
-                    'quantite' => $produitData['quantite'],
-                    'date_peremption' => $produitData['date_peremption'],
-                    // ajouter autres champs nécessaires ici (ex: type_produit_id)
+
+            // Création des produits
+            foreach ($validated['produits'] as $data) {
+                Produit::create([
+                    'type_produit_id' => $data['type_produit_id'],
+                    'zone_stock_id' => $data['zone_stock_id'],
+                    'quantite' => $data['quantite'],
+                    'date_peremption' => $data['date_peremption'],
                 ]);
-            }// redirige vers le dashboard
-            return redirect()->route('dashboard')->with('success', 'Les produits ont été ajoutés avec succès.');
+            }
+
+            return redirect()->route('dashboard')
+                ->with('success', 'Les produits ont été ajoutés avec succès.');
         } catch (\Exception $e) {
-            // Redirige vers la précédente page avec un message d'erreur
-            Log::error('Erreur lors de l\'ajout des produits', [
-                'message' => $e->getMessage(),
-                'request' => $request->all()
+            Log::error("Erreur lors de l'ajout des produits : " . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all(),
             ]);
-            return redirect()->back()->with('error', 'Une erreur est survenue lors de l\'ajout des produits.<br>Veuillez contacter l\'administrateur.');
+
+            return redirect()->back()
+                ->with('error', 'Une erreur est survenue lors de l\'ajout des produits.<br>Veuillez contacter l\'administrateur.')
+                ->withInput(); // Pour ne pas perdre les données remplies
         }
     }
 
 
 
+
     public function edit($id)
     {
-        $produit = Produits::with(['typeProduit', 'zoneStock'])->findOrFail($id);
-        $zonesStock = ZoneStock::all();
+        $produit = Produit::with(['typeProduit', 'zoneStock'])->findOrFail($id);
+        $zonesStock = ZoneStock::where('antenne_id', auth()->user()->antenne_id)->get();
         $typeProduits = TypeProduit::all();
 
         return view('produit-edit', compact('produit', 'zonesStock', 'typeProduits'));
@@ -68,13 +77,13 @@ class ProduitsController
 
         try {
             $request->validate([
-                'type_produit_id' => 'required|exists:type_produit,id',
-                'zone_stock_id' => 'required|exists:zone_stocks,id',
+                'type_produit_id' => 'required|exists:types_produits,id',
+                'zone_stock_id' => 'required|exists:zones_stocks,id',
                 'quantite' => 'required|integer|min:0',
                 'date_peremption' => 'required|date'
             ]);
-            $produit = Produits::findOrFail($id);
-            $produit->produit_id = $request->input('type_produit_id');
+            $produit = Produit::findOrFail($id);
+            $produit->type_produit_id = $request->input('type_produit_id'); // Correction ici
             $produit->zone_stock_id = $request->input('zone_stock_id');
             $produit->quantite = $request->input('quantite');
             $produit->date_peremption = $request->input('date_peremption');

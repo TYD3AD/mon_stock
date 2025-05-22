@@ -7,25 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Log;
 
-class Produits extends Model
+class Produit extends Model
 {
     use HasFactory;
 
     protected $table = 'produits';
 
 
-    protected $fillable = ['produit_id', 'zone_stock_id', 'quantite', 'date_peremption'];
+    protected $fillable = ['type_produit_id', 'zone_stock_id', 'quantite', 'date_peremption'];
 
     public function typeProduit()
     {
-        return $this->belongsTo(TypeProduit::class, 'produit_id');
+        return $this->belongsTo(TypeProduit::class, 'type_produit_id');
     }
 
 
     public function zoneStock()
     {
-        return $this->belongsTo(ZoneStock::class);
+        return $this->belongsTo(ZoneStock::class, 'zone_stock_id');
     }
+
 
     protected $casts = [
         'date_peremption' => 'date',
