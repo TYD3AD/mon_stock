@@ -16,7 +16,7 @@ class ProduitsController
     public function create()
     {
         // récupère toutes les zones de stock liés à l'antenne de l'utilisateur
-        $zonesStock = ZoneStock::where('antenne_id', auth()->user()->antenne_id)->get();
+        $zonesStock = ZoneStock::where('antenne_id', auth()->user()->antennes->pluck('id'))->get();
 
         $typesProduits = TypeProduit::all();
 
@@ -66,7 +66,7 @@ class ProduitsController
     public function edit($id)
     {
         $produit = Produit::with(['typeProduit', 'zoneStock'])->findOrFail($id);
-        $zonesStock = ZoneStock::where('antenne_id', auth()->user()->antenne_id)->get();
+        $zonesStock = ZoneStock::whereIn('antenne_id', auth()->user()->antennes->pluck('id'))->get();
         $typeProduits = TypeProduit::all();
 
         return view('produit-edit', compact('produit', 'zonesStock', 'typeProduits'));

@@ -20,9 +20,9 @@ class PharmacieController extends Controller
         })
             ->get();
 
-        $antenne = auth()->user()->antenne;
+        $antennes = auth()->user()->antennes()->pluck('nom', 'antennes.id');
 
-        return view('pharmacie', compact('produits', 'antenne'));
+        return view('pharmacie', compact('produits', 'antennes'));
     }
 
     /**

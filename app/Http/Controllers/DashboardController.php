@@ -21,8 +21,12 @@ class DashboardController extends Controller
             $produit ? \Carbon\Carbon::parse($produit->date_peremption)->format('d/m/Y') : '—';
         }
 
-        $antenne = auth()->user()->antenne;
+        $antennes = auth()->user()->antennes()->pluck('nom', 'antennes.id');
 
-        return view('dashboard', compact('produits', 'antenne'));
+
+
+
+
+        return view('dashboard', compact('produits', 'antennes'));
     }
 }
