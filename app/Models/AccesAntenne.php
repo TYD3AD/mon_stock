@@ -26,6 +26,7 @@ class AccesAntenne extends Model
         return $this->belongsTo(User::class, 'id_user');
     }
 
+
     public function antenne()
     {
         return $this->belongsTo(Antenne::class, 'id_antenne');

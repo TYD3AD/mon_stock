@@ -11,19 +11,28 @@ class PharmacieController extends Controller
     /**
      * Affiche la liste des produits en stock dans la zone Pharmacie.
      */
-    public function index()
-    {
-        // Filtre les produits stockés dans la zone "Pharmacie"
-        $produits = Produit::with(['typeProduit', 'zoneStock']) // <== ici
-        ->whereHas('zoneStock', function ($query) {
-            $query->where('nom', 'Pharmacie');
-        })
-            ->get();
+        public function index($antenne)
+        {
 
-        $antennes = auth()->user()->antennes()->pluck('nom', 'antennes.id');
+            // récupère les produits avec leur type de produit et leur zone de stock de la pharmacie de l'antenne
+            $produits = Produit::with(['typeProduit', 'zoneStock']) // <== ici
+                ->whereHas('zoneStock', function ($query) use ($antenne) {
+                    $query->where('nom', 'like', 'Pharmacie%')
+                        ->where('antenne_id', $antenne);
+                })
+                ->get();
 
-        return view('pharmacie', compact('produits', 'antennes'));
-    }
+            // Filtre les produits stockés dans la zone "Pharmacie"
+            $produit2s = Produit::with(['typeProduit', 'zoneStock']) // <== ici
+            ->whereHas('zoneStock', function ($query) {
+                $query->where('nom', 'Pharmacie');
+            })
+                ->get();
+
+            $antennes = auth()->user()->antennes()->pluck('nom', 'antennes.id');
+
+            return view('pharmacie', compact('produits', 'antennes'));
+        }
 
     /**
      * Met à jour les informations d’un stock de la pharmacie.

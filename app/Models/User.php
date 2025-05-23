@@ -51,4 +51,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Antenne::class, 'acces_antenne', 'id_user', 'id_antenne');
     }
 
+    public function antenneP()
+    {
+        return $this->belongsTo(Antenne::class, 'antenne_id');
+    }
+
+
 }
