@@ -7,6 +7,8 @@ use App\Models\TypeProduit;
 use App\Models\ZoneStock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Models\Dashboard;
+use App\Http\Controllers\DashboardController;
 
 use function PHPSTORM_META\type;
 
@@ -33,11 +35,16 @@ class ProduitsController
                 'produits.*.type_produit_id' => 'required|exists:types_produits,id',
                 'produits.*.zone_stock_id' => 'required|exists:zones_stocks,id',
                 'produits.*.quantite' => 'required|integer|min:0',
-                'produits.*.date_peremption' => 'required|date',
+                'produits.*.date_peremption' => 'nullable|date',
             ]);
+
 
             // Création des produits
             foreach ($validated['produits'] as $data) {
+
+                if(isset($data['date_peremption']) && $data['date_peremption'] == '') {
+                    $data['date_peremption'] = null; // Assurez-vous que la date d'expiration est nulle si elle n'est pas fournie
+                }
                 Produit::create([
                     'type_produit_id' => $data['type_produit_id'],
                     'zone_stock_id' => $data['zone_stock_id'],
@@ -80,8 +87,9 @@ class ProduitsController
                 'type_produit_id' => 'required|exists:types_produits,id',
                 'zone_stock_id' => 'required|exists:zones_stocks,id',
                 'quantite' => 'required|integer|min:0',
-                'date_peremption' => 'required|date'
+                'date_peremption' => 'nullable|date'
             ]);
+
             $produit = Produit::findOrFail($id);
             $produit->type_produit_id = $request->input('type_produit_id'); // Correction ici
             $produit->zone_stock_id = $request->input('zone_stock_id');
@@ -89,7 +97,7 @@ class ProduitsController
             $produit->date_peremption = $request->input('date_peremption');
             $produit->save();
             // Redirige vers la précédente page avec un message de succès
-            return redirect()->back()->with('success', 'Le produit a été mis à jour avec succès.');
+            return redirect()->route('dashboard')->with('success', 'Produit mis à jour avec succès.');
 
         } catch (\Exception $e) {
             // Redirige vers la précédente page avec un message d'erreur
@@ -97,8 +105,17 @@ class ProduitsController
                 'message' => $e->getMessage(),
                 'request' => $request->all()
             ]);
-            return redirect()->back()->with('error', 'Une erreur est survenue lors de la mise à jour du produit.<br>Veuillez contacter l\'administrateur.');
+            // Redirige vers la vue dashboard avec un message d'erreur
+            return redirect()->route('dashboard')->with('error', 'Une erreur est survenue lors de la mise à jour du produit.<br>Veuillez contacter l\'administrateur.');
         }
+    }
+
+    public function delete($id)
+    {
+        $produit = Produit::findOrFail($id);
+        $produit->delete();
+
+        return redirect()->back()->with('success', 'Le produit a été supprimé avec succès.');
     }
 
 }

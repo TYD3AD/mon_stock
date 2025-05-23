@@ -1,5 +1,5 @@
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-4<x-app-layout>
+<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Ajout de produits') }}
@@ -106,9 +106,20 @@
                 </template>
                 </tbody>
             </table>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">
+            <button
+                type="submit"
+                :class="{
+        'bg-gray-400 cursor-not-allowed pointer-events-none': !canSubmit(),
+        'bg-blue-500 hover:bg-blue-600 cursor-pointer': canSubmit()
+    }"
+                class="text-white px-4 py-2 rounded mt-4 transition-colors duration-1000"
+                @click.prevent="if(!canSubmit()) return false"
+            >
                 Enregistrer les produits
             </button>
+
+
+
         </div>
 
     </form>
@@ -129,6 +140,12 @@
                         p.nom.toLowerCase().includes(terme)
                     );
                     this.highlightedIndex = -1; // reset quand on tape
+                },
+
+                canSubmit() {
+                    if (this.selectedProduits.length === 0) return false;
+                    // Vérifie que toutes les quantités sont > 0
+                    return this.selectedProduits.every(p => p.quantite > 0);
                 },
 
                 ajouterProduit(produit) {
@@ -175,6 +192,8 @@
                 },
             }
         }
+
+
 
     </script>
 

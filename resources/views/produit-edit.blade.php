@@ -8,7 +8,6 @@
 
 
     <div class="max-w-xl mx-auto mt-10">
-
         <form action="{{ route('produit.update', $produit->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -48,7 +47,7 @@
             <div class="mb-4">
                 <label class="block mb-1 font-semibold">Date de péremption</label>
                 <input type="date" name="date_peremption"
-                       value="{{ old('date_peremption', $produit->date_peremption->format('Y-m-d')) }}"
+                       value="{{ old('date_peremption', optional($produit->date_peremption)->format('Y-m-d')) }}"
                        class="w-full border rounded px-3 py-2">
             </div>
 
