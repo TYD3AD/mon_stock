@@ -28,12 +28,10 @@ class DashboardController extends Controller
         $antenneP = Antenne::where('id', $user->antenne_id)->first();
 
         // retire l'antenne principale de la liste des antennes
-        $antennes = $antennes->forget($antenneP->id);
+        $antennes = $antennes->where('id', '!=', $user->antenne_id);
 
         // récupère les zones de stock des antennes de l'utilisateur
         $zones = ZoneStock::whereIn('antenne_id', auth()->user()->antennes->pluck('id'))->get();
-
-
 
 
         return view('dashboard', compact('produits', 'antennes', 'antenneP', 'zones'));

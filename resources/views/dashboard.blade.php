@@ -1,16 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-{{--            {{ __('Stock de l\'antenne de ') }} {{ $antennes->first() }}--}}
-            {{-- Bouton ajout de produit --}}
-            <div class="flex justify-end sm:px-6 lg:px-8">
-                <a href="{{ route('produit.create') }}"
-                   class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 mr-12 rounded">
-                    Ajout de produits
-                </a>
-            </div>
-        </h2>
-    </x-slot>
+
     @php
         $pharmacie = 1;
         $vtu = 2;
@@ -92,11 +81,11 @@
                     <table class="min-w-full bg-white border border-gray-300">
                         <thead>
                         <tr>
-                            <th class="px-4 py-2 border w-7/12">Produit</th>
-                            <th class="px-4 py-2 border">Zone</th>
-                            <th class="px-4 py-2 border">Quantité</th>
-                            <th class="px-4 py-2 border">Date de péremption</th>
-                            <th class="px-4 py-2 border w-1/12">Modification</th>
+                            <th class="px-4 py-2 border w-7/12 text-start">Produit</th>
+                            <th class="px-4 py-2 border text-start">Zone</th>
+                            <th class="px-4 py-2 border text-start">Quantité</th>
+                            <th class="px-4 py-2 border text-start">Date de péremption</th>
+                            <th class="px-4 py-2 border w-1/12"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -113,12 +102,12 @@
                                 <td class="border px-4 py-2 text-center">
                                     <div class="flex justify-center space-x-6">
                                         <a href="{{ route('produit.edit', $produit) }}"
-                                           class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded">
-                                            Modifier
+                                           class="bg-white font-bold rounded h-fit w-8">
+                                            <img src="/img/edit.png" alt="" class="w-28 h-fit">
                                         </a>
                                         <a href="{{ route('produit.delete', $produit) }}"
-                                           class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded">
-                                            Supprimer
+                                           class="bg-white hover:bg-white text-white font-bold h-8 w-8 rounded content-center">
+                                            ❌
                                         </a>
                                     </div>
                                 </td>
