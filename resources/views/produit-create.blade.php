@@ -14,8 +14,8 @@
         @endif
     </div>
 
-    <form action="{{ route('produit.store') }}" method="POST" @submit.prevent="submitForm">
-        @csrf
+    <form action="{{ route('produit.store') }}" method="POST">
+    @csrf
         <div x-data="produitSelector()" class="w-full mx-auto mt-10 flex flex-col items-center">
 
             <!-- Recherche produit -->
@@ -113,7 +113,6 @@
         'bg-blue-500 hover:bg-blue-600 cursor-pointer': canSubmit()
     }"
                 class="text-white px-4 py-2 rounded mt-4 transition-colors duration-1000"
-                @click.prevent="if(!canSubmit()) return false"
             >
                 Enregistrer les produits
             </button>

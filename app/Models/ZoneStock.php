@@ -11,12 +11,13 @@ class ZoneStock extends Model
 
     protected $table = 'zones_stocks';
 
-    protected $fillable = ['nom', 'antenne_id'];
+    protected $fillable = ['nom', 'antenne_id', 'categorie'];
 
-    public function antennes()
+    public function antenne()
     {
-        return $this->belongsTo(Antenne::class);
+        return $this->belongsTo(Antenne::class, 'antenne_id');
     }
+
 
     public function produits()
     {

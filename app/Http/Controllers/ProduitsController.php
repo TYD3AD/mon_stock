@@ -17,8 +17,8 @@ class ProduitsController
 
     public function create()
     {
-        // récupère toutes les zones de stock liés à l'antenne de l'utilisateur
-        $zonesStock = ZoneStock::where('antenne_id', auth()->user()->antenne_id)->get();
+        // récupère toutes les zones de stock liés aux antennes de l'utilisateur
+        $zonesStock = ZoneStock::whereIn('antenne_id', auth()->user()->antennes->pluck('id'))->get();
 
         $typesProduits = TypeProduit::all();
 
@@ -73,7 +73,7 @@ class ProduitsController
     public function edit($id)
     {
         $produit = Produit::with(['typeProduit', 'zoneStock'])->findOrFail($id);
-        $zonesStock = ZoneStock::where('antenne_id', auth()->user()->antenne_id)->get();
+        $zonesStock = ZoneStock::whereIn('antenne_id', auth()->user()->antennes->pluck('id'))->get();
         $typeProduits = TypeProduit::all();
 
         return view('produit-edit', compact('produit', 'zonesStock', 'typeProduits'));
@@ -116,6 +116,27 @@ class ProduitsController
         $produit->delete();
 
         return redirect()->back()->with('success', 'Le produit a été supprimé avec succès.');
+    }
+
+    public function listAccess($antenne, $categorie)
+    {
+        // récupère les produits avec leur type de produit et leur zone de stock de la pharmacie de l'antenne
+        $produits = Produit::with(['typeProduit', 'zoneStock']) // <== ici
+        ->whereHas('zoneStock', function ($query) use ($antenne, $categorie) {
+            $query->where('categorie', $categorie)
+                ->where('antenne_id', $antenne);
+        })
+            ->get();
+
+        $antennes = auth()->user()->antennes()->pluck('nom', 'antennes.id');
+
+        $categorie = 'Pharmacie';
+
+        return view('produit-list',
+            compact(
+                'produits',
+                'antennes',
+            'categorie'));
     }
 
 }
