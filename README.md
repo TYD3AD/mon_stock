@@ -14,6 +14,7 @@ Mon Stock est une application de gestion de stock, développée à des fins d'ut
 #
 #
 #
+#
 
 ### (English)
 # My Stock
