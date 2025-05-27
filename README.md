@@ -1,4 +1,4 @@
-(Français)
+### (Français)
 # Mon Stock
 Mon Stock est une application de gestion de stock, développée à des fins d'utilisation interne à l'association départementale de la Protection Civile de Loire-Atlantique.
 
@@ -11,13 +11,11 @@ Mon Stock est une application de gestion de stock, développée à des fins d'ut
 ## Crédits
 - Teddy R. - Fondateur de l'application - [Github de Teddy R.](https://github.com/TYD3AD).
 
-\
-\
-\
-\
-\
-\
-(English)
+#
+#
+#
+
+### (English)
 # My Stock
 My Stock is a stock management application, developed for internal use by the Loire-Atlantique departmental association of Protection Civil.
 
