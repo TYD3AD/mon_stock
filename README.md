@@ -1,5 +1,4 @@
 # Mon Stock
-
 Mon Stock est une application de gestion de stock, développée à des fins d'utilisation interne à l'association départementale de la Protection Civile de Loire-Atlantique.
 
 ## Ses objectifs 
