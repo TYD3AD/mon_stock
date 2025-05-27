@@ -9,7 +9,7 @@ Mon Stock est une application de gestion de stock, développée à des fins d'ut
 
 
 ## Crédits
-- Teddy R. - fondateur de l'application - [Github de Teddy R.](https://github.com/TYD3AD).
+- Teddy R. - Fondateur de l'application - [Github de Teddy R.](https://github.com/TYD3AD).
 
 
 
@@ -26,6 +26,6 @@ My Stock is a stock management application, developed for internal use by the Lo
 
 
 ## Credits
-- Teddy R. - founder of the application - [Teddy R.'s Github](https://github.com/TYD3AD).
+- Teddy R. - Founder of the application - [Teddy R.'s Github](https://github.com/TYD3AD).
 
 (Translated with DeepL.com)
