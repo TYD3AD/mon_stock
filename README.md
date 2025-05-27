@@ -14,8 +14,6 @@ Mon Stock est une application de gestion de stock, développée à des fins d'ut
 
 
 # My Stock
-
-
 My Stock is a stock management application, developed for internal use by the Loire-Atlantique departmental association of Protection Civil.
 
 ## Its objectives are to
