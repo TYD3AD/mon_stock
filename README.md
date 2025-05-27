@@ -1,6 +1,6 @@
 # Mon Stock
 
-Mon Stock est une application de gestion de stock, développée à des fins d'utilisation interne à l'association départementale de la Protection Civile de Loire Atlantique.
+Mon Stock est une application de gestion de stock, développée à des fins d'utilisation interne à l'association départementale de la Protection Civile de Loire-Atlantique.
 
 ## Ses objectifs 
 - Permettre aux bénévoles de l'association de gérer les stocks de matériel et de consommables de leur antenne.
@@ -9,7 +9,7 @@ Mon Stock est une application de gestion de stock, développée à des fins d'ut
 
 
 ## Crédits
-- Teddy R., fondateur de l'application - [Github de Teddy R.](https://github.com/TYD3AD).
+- Teddy R. - fondateur de l'application - [Github de Teddy R.](https://github.com/TYD3AD).
 
 
 
@@ -26,6 +26,6 @@ My Stock is a stock management application, developed for internal use by the Lo
 
 
 ## Credits
-- Teddy R., founder of the application - [Teddy R.'s Github](https://github.com/TYD3AD).
+- Teddy R. - founder of the application - [Teddy R.'s Github](https://github.com/TYD3AD).
 
 (Translated with DeepL.com)
