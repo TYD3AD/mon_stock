@@ -8,4 +8,12 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    server: {
+        host: '192.168.1.32', // ← ton IP locale
+        port: 5173,
+        strictPort: true,
+        hmr: {
+            host: '192.168.1.32', // ← pour le hot reload
+        },
+    },
 });

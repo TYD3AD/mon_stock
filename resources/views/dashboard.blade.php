@@ -5,9 +5,33 @@
         $vtu = 2;
         $vpsp = 3;
     @endphp
-    <div class="flex flex-row h-screen">
-        <div class="w-1/12 relative">
-            <nav class="absolute inset-y-0 left-0 w-full bg-white text-gray-500 p-4 flex flex-col space-y-4"> {{-- Darker red, white text, padding, flex column, spacing --}}
+        <!-- Script pour basculer l'affichage de la nav sur mobile -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggle = document.getElementById('menu-toggle');
+            const nav = document.getElementById('side-nav');
+
+            toggle.addEventListener('click', function () {
+                nav.classList.toggle('hidden');
+            });
+        });
+    </script>
+    <style>
+        @media (min-width: 768px) {
+            .custom-height-md {
+                height: calc(100vh - 80px);
+            }
+        }
+    </style>
+    <div class="flex flex-row custom-height-md">
+
+
+        <!-- Container nav complet -->
+        <div class=" lg:w-1/12 relative custom-height-md">
+            <!-- Navbar : masquée sur mobile, visible si toggle activé -->
+            <nav id="side-nav"
+                 class="hidden absolute lg:block inset-y-0 left-0 bg-white text-gray-500 p-4 flex flex-col space-y-4 z-50"> {{-- ajout z-50 pour l'empêcher d'être cachée --}}
+
                 <div class="mb-6"> {{-- Added margin-bottom for separation --}}
                     <h4 class="text-lg font-semibold border-b-2 border-orange-500 pb-2 mb-2">Antenne de {{$antenneP->nom}}</h4> {{-- Styled heading --}}
                     @if($zones->contains(fn($zone) => $zone->antenne_id === $antenneP->id && $zone->categorie == 1))
@@ -56,7 +80,10 @@
                 @endforeach
             </nav>
         </div>
-        <div class="w-11/12"> {{-- Partie principale --}}
+        {{-- Partie principale --}}
+        <div class="w-full">
+
+            {{-- Messages succes/erreurs --}}
             <div class="ml-12">
                 @if(session('error'))
                     <div class="bg-red-500 text-white p-4 rounded-lg" name="messageError">{!! session('error') !!}</div>
@@ -75,9 +102,8 @@
                 </script>
             </div>
 
+            {{-- Block tableau --}}
             <div>
-
-
                 <div class="bg-green-300 hidden">
                     <h1 class="ml-8 text-2xl font-bold">Partie filtre</h1>
                 </div>

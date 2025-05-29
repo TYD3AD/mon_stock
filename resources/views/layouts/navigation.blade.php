@@ -1,6 +1,18 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 flex">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 flex h-20">
     <!-- Primary Navigation Menu -->
-    <div class="shrink-0 ">
+    <div class="shrink-0 flex flex-row">
+        @if(request()->routeIs('dashboard'))
+            <!-- Bouton hamburger (visible seulement en mobile) -->
+            <div class="lg:hidden p-4">
+                <button id="menu-toggle" class="text-gray-600 focus:outline-none">
+                    <!-- Icône hamburger (3 barres) -->
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        @endif
         <a href="{{ route('dashboard') }}" class="flex flex-row items-center">
             <img src="/img/logo-protec.svg" alt="Logo Protection Civile" class="h-14 w-14 mx-4 my-2">
             <h1 class="monStock">{{__('Mon Stock')}}</h1>
