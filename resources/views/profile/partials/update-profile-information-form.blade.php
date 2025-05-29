@@ -19,7 +19,7 @@
 
         <div>
             <x-input-label for="name" :value="__('Identifiant')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full bg-gray-100" :value="old('name', $user->name)" required autofocus autocomplete="name" disabled/>
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
@@ -56,7 +56,7 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
+                    class="text-sm text-gray-600 bg-green-100 p-2 rounded"
                 >{{ __('Sauvegardé.') }}</p>
             @endif
         </div>
