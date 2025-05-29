@@ -118,8 +118,18 @@ class ProduitsController
         return redirect()->back()->with('success', 'Le produit a été supprimé avec succès.');
     }
 
-    public function listAccess($antenne, $categorie)
+    public function listAccess($antenne, $categorie, $id=null)
     {
+        // Vérifie si l'utilisateur a accès à l'antenne
+        if (!auth()->user()->antennes->contains($antenne)) {
+            return redirect()->route('dashboard')->with('error', 'Vous n\'avez pas accès à cette antenne.');
+        }
+        // Vérifie si la catégorie est valide
+        $zonesCategories = ZoneStock::where('antenne_id', $antenne)->pluck('categorie')->unique();
+        if (!$zonesCategories->contains($categorie)) {
+            return redirect()->route('dashboard')->with('error', 'La catégorie demandé n\'existe pas.');
+        }
+
         // récupère les produits avec leur type de produit et leur zone de stock de la pharmacie de l'antenne
         $produits = Produit::with(['typeProduit', 'zoneStock']) // <== ici
         ->whereHas('zoneStock', function ($query) use ($antenne, $categorie) {
@@ -127,6 +137,10 @@ class ProduitsController
                 ->where('antenne_id', $antenne);
         })
             ->get();
+        if($id != null)
+        {
+            $produits = $produits->where('id', $id);
+        }
 
         $antennes = auth()->user()->antennes()->pluck('nom', 'antennes.id');
 

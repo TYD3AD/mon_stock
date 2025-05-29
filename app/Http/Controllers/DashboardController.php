@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Antenne;
+
 use App\Models\ZoneStock;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Produit;
@@ -15,7 +16,7 @@ class DashboardController extends Controller
 
         // Récupère les produits de toutes les zones des antennes de l'utilisateur
         $produits = Produit::whereHas('zoneStock.antenne.accesAntennes', function ($query) {
-            $query->where('id_user', 1);
+            $query->where('id_user', Auth::id());
         })->with(['zoneStock.antenne.accesAntennes.user'])->get();
 
 
