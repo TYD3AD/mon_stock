@@ -8,7 +8,6 @@ use App\Models\ZoneStock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Dashboard;
-use App\Http\Controllers\DashboardController;
 
 use function PHPSTORM_META\type;
 
@@ -139,7 +138,7 @@ class ProduitsController
             ->get();
         if($id != null)
         {
-            $produits = $produits->where('id', $id);
+            $produits = $produits->where('zone_stock_id', $id);
         }
 
         $antennes = auth()->user()->antennes()->pluck('nom', 'antennes.id');

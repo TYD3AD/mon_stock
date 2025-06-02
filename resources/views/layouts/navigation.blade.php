@@ -204,10 +204,10 @@ use Illuminate\Support\Facades\Auth;
             @endif
             @if($zones->contains(fn($zone) => $zone->antenne_id === $antenneP->id && $zone->categorie == 3))
                 <?php $vpsps = $zones->where('antenne_id', $antenneP->id)->where('categorie', 3); ?>
-                @foreach($vpsps as $vpsp)
+                @foreach($vpsps as $vps)
                     <div>
-                        <a href="{{ route('produits.listAccess', [$antenneP->id, $vpsp, $vpsp->id]) }}"
-                           class="block py-2 px-3 rounded-md text-sm font-medium hover:bg-gray-100 hover:text-orange-500 transition duration-150 ease-in-out">{{ $vpsp->nom }}</a> {{-- Button styling --}}
+                        <a href="{{ route('produits.listAccess', [$antenneP->id, $vpsp, $vps->id  ]) }}"
+                           class="block py-2 px-3 rounded-md text-sm font-medium hover:bg-gray-100 hover:text-orange-500 transition duration-150 ease-in-out">{{ $vps->nom }}</a> {{-- Button styling --}}
                     </div>
                 @endforeach
             @endif
@@ -233,10 +233,10 @@ use Illuminate\Support\Facades\Auth;
                 @endif
                 @if($zones->contains(fn($zone) => $zone->antenne_id === $antenne->id && $zone->categorie == 3))
                         <?php $vpsps = $zones->where('antenne_id', $antenne->id)->where('categorie', 3); ?>
-                    @foreach($vpsps as $vpsp)
+                    @foreach($vpsps as $vps)
                         <div>
-                            <a href="{{ route('produits.listAccess', [$antenne->id, $vpsp, $vpsp->id]) }}"
-                               class="block py-2 px-3 rounded-md text-sm font-medium hover:bg-gray-100 hover:text-orange-500 transition duration-150 ease-in-out">{{ $vpsp->nom }}</a> {{-- Button styling --}}
+                            <a href="{{ route('produits.listAccess', [$antenne->id, $vpsp, $vps->id]) }}"
+                               class="block py-2 px-3 rounded-md text-sm font-medium hover:bg-gray-100 hover:text-orange-500 transition duration-150 ease-in-out">{{ $vps->nom }}</a> {{-- Button styling --}}
                         </div>
                     @endforeach
                 @endif
