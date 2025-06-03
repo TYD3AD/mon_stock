@@ -6,10 +6,12 @@ use App\Models\Produit;
 use App\Models\TypeProduit;
 use App\Models\ZoneStock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Dashboard;
 
 use function PHPSTORM_META\type;
+use function Psy\debug;
 
 class ProduitsController
 {
@@ -150,6 +152,85 @@ class ProduitsController
                 'produits',
                 'antennes',
             'categorie'));
+    }
+
+    public function transferView($id)
+    {
+        $produit = Produit::with(['typeProduit', 'zoneStock'])->findOrFail($id);
+        $zonesStock = ZoneStock::whereIn('antenne_id', auth()->user()->antennes->pluck('id'))->get();
+        $typeProduits = TypeProduit::all();
+
+        // Retire la zone actuelle du produit de la liste des zones de stock
+        $zonesStock = $zonesStock->where('id', '!=', $produit->zone_stock_id);
+
+        return view('produit-transferView', compact('produit', 'zonesStock', 'typeProduits'));
+    }
+
+    public function transfertUpdate(Request $request, Produit $produit)
+    {
+
+        $request->validate([
+            'zone_stock_id' => 'required|exists:zones_stocks,id',
+            'quantite' => 'required|integer|min:1|max:' . $produit->quantite,
+        ]);
+
+
+
+        $quantiteATransferer = $request->quantite;
+        $zoneCibleId = $request->zone_stock_id;
+
+        try {
+            DB::transaction(function () use ($produit, $quantiteATransferer, $zoneCibleId) {
+                // 1. Décrémenter la quantité de la ligne source
+                $produit->quantite -= $quantiteATransferer;
+                $produit->save();
+
+                // 2. Chercher une ligne cible
+                $query = Produit::where('type_produit_id', $produit->type_produit_id)
+                    ->where('zone_stock_id', $zoneCibleId);
+
+                if ($produit->date_peremption) {
+                    $query->whereDate('date_peremption', $produit->date_peremption);
+                } else {
+                    $query->whereNull('date_peremption');
+                }
+
+                $ligneCible = $query->first();
+
+                if ($ligneCible) {
+                    // 3. Ajouter la quantité
+                    $ligneCible->quantite += $quantiteATransferer;
+                    $ligneCible->save();
+                    Log::info("Mise à jour de la ligne cible ID : " . $ligneCible->id . " avec la nouvelle quantité : " . $ligneCible->quantite);
+                } else {
+                    // 4. Créer une nouvelle ligne
+                    Produit::create([
+                        'type_produit_id' => $produit->type_produit_id,
+                        'zone_stock_id' => $zoneCibleId,
+                        'quantite' => $quantiteATransferer,
+                        'date_peremption' => $produit->date_peremption, // peut être null
+                    ]);
+                    Log::info("Création d'une nouvelle ligne pour le produit ID : " . $produit->id . " dans la zone cible ID : " . $zoneCibleId);
+                }
+                // 5. Si la quantité devient 0, on supprime la ligne source
+                Log::info("Quantité après transfert : " . $produit->quantite);
+                if ($produit->quantite <= 0) {
+                    Log::info("Suppression du produit ID : " . $produit->id);
+                    $produit->delete();
+                }
+            });
+        } catch (\Exception $e) {
+            // En cas d'erreur, on log l'erreur et on redirige avec un message d'erreur
+            Log::error('Erreur lors du transfert de produit', [
+                'message' => $e->getMessage(),
+                'produit_id' => $produit->id,
+                'quantite' => $quantiteATransferer,
+                'zone_cible_id' => $zoneCibleId,
+            ]);
+            return redirect()->route('dashboard')->with('error', 'Une erreur est survenue lors du transfert du produit.<br>Veuillez contacter l\'administrateur.');
+        }
+        Log::info("Transfert de produit ID : " . $produit->id . " de la zone ID : " . $produit->zone_stock_id . " vers la zone ID : " . $zoneCibleId . " avec une quantité de : " . $quantiteATransferer);
+        return redirect()->route('dashboard')->with('success', 'Transfert effectué.');
     }
 
 }

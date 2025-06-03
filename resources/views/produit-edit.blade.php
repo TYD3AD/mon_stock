@@ -51,18 +51,12 @@
                        class="w-full border rounded px-3 py-2">
             </div>
 
-            <div class="flex items-center">
+            <div class="flex justify-between">
                 <button type="submit"
-                        class="bg-blue-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                        class="bg-green-500 hover:bg-green-700 text-white text-center font-bold py-2 px-4 rounded w-44">
                     Enregistrer
                 </button>
-                <div class="ml-12">
-                    @if(session('error'))
-                        <div class="bg-red-500 text-white p-4 rounded-lg">{!! session('error') !!}</div> {{-- Note le `{!! !!}` --}}
-                    @elseif(session('success'))
-                        <div class="bg-green-500 text-white p-4 rounded-lg">{!! session('success') !!}</div> {{-- Note le `{!! !!}` --}}
-                    @endif
-                </div>
+                <a href="{{ route('produit.transferView', $produit) }}" class="bg-blue-500 hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded mr-4 w-44">Transférer le stock</a>
             </div>
         </form>
     </div>

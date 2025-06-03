@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/produits/{produit}/delete', [ProduitsController::class, 'delete'])->name('produit.delete');
     Route::put('/produits/{id}/update', [ProduitsController::class, 'update'])->name('produits.update');
     Route::get('/produits/{produit}/update', [ProduitsController::class, 'update'])->name('produit.update'); // à supprimer ?
+    Route::get('/produits/{produit}/transferView', [ProduitsController::class, 'transferView'])->name('produit.transferView');
+    Route::put('/produits/{produit}/transfertUpdate', [ProduitsController::class, 'transfertUpdate'])->name('produit.transfertUpdate');
 
     Route::get('/produits/listAcess/{antenne}/{categorie}', [ProduitsController::class, 'listAccess'])->name('produits.listAccess');
     Route::get('/produits/listAcess/{antenne}/{categorie}/{id?}', [ProduitsController::class, 'listAccess'])->name('produits.listAccess');

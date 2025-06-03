@@ -127,6 +127,12 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'suivi' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/suivi_logs.log'),
+            'level' => 'debug', // inclut debug, info, warning, error, etc.
+        ],
+
     ],
 
 ];
