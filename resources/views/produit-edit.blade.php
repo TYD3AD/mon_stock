@@ -52,12 +52,6 @@
                            class="w-full border rounded px-3 py-2">
                 </div>
 
-            <div class="flex justify-between">
-                <button type="submit"
-                        class="bg-green-500 hover:bg-green-700 text-white text-center font-bold py-2 px-4 rounded w-44">
-                    Enregistrer
-                </button>
-                <a href="{{ route('produit.transferView', $produit) }}" class="bg-blue-500 hover:bg-blue-700 text-white text-center font-bold py-2 px-4 rounded mr-4 w-44">Transférer le stock</a>
                 <div class="flex justify-between">
                     <button type="submit"
                             class="bg-green-500 hover:bg-green-700 text-white text-center font-bold py-2 px-4 rounded w-44">
