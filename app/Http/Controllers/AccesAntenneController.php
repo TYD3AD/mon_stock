@@ -60,7 +60,7 @@ class AccesAntenneController extends Controller
             log::error("Erreur lors de la récupération de l'utilisateur ID: {$request->user_id} - " . $e->getMessage());
         }
 
-        log::info("Utilisateur : {$user->name} (ID: {$user->id}) ajouté à l'antenne ID: {$request->antenne_id}");
+        log::info("Utilisateur : {$user->identifiant} (ID: {$user->id}) ajouté à l'antenne ID: {$request->antenne_id}");
         return response()->json([
             'success' => true,
             'user' => $user,

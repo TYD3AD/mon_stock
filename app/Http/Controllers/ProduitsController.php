@@ -54,11 +54,11 @@ class ProduitsController
                 ]);
             }
 
-            Log::info("Produits ajoutés avec succès par l'utilisateur ". auth()->user()->name . " : " . json_encode($validated['produits']));
+            Log::info("Produits ajoutés avec succès par l'utilisateur ". auth()->user()->identifiant . " : " . json_encode($validated['produits']));
             return redirect()->route('dashboard')
                 ->with('success', 'Les produits ont été ajoutés avec succès.');
         } catch (\Exception $e) {
-            Log::error("Erreur lors de l'ajout des produits par l'utilisateur ". auth()->user()->name . " : " . json_encode($validated['produits']) . " - Erreur : " . $e->getMessage() . " - Requête : " . json_encode($request->all()));
+            Log::error("Erreur lors de l'ajout des produits par l'utilisateur ". auth()->user()->identifiant . " : " . json_encode($validated['produits']) . " - Erreur : " . $e->getMessage() . " - Requête : " . json_encode($request->all()));
 
             return redirect()->back()
                 ->with('error', 'Une erreur est survenue lors de l\'ajout des produits.<br>Veuillez contacter l\'administrateur.')
@@ -96,12 +96,12 @@ class ProduitsController
             $produit->date_peremption = $request->input('date_peremption');
             $produit->save();
 
-            Log::info("Produit mis à jour avec succès par l'utilisateur ". auth()->user()->name. " : Produit ID : ". $produit->id . " - Quantité : ". $produit->quantite . " - Date d'expiration : ". $produit->date_peremption);
+            Log::info("Produit mis à jour avec succès par l'utilisateur ". auth()->user()->identifiant. " : Produit ID : ". $produit->id . " - Quantité : ". $produit->quantite . " - Date d'expiration : ". $produit->date_peremption);
             // Redirige vers la précédente page avec un message de succès
             return redirect()->route('dashboard')->with('success', 'Produit mis à jour avec succès.');
 
         } catch (\Exception $e) {
-            Log::error("Erreur lors de la mise à jour du produit ID : " . $id . "Par l'utilisateur " . auth()->user()->name . " - Erreur : " . $e->getMessage() . " - Requête : " . json_encode($request->all()));
+            Log::error("Erreur lors de la mise à jour du produit ID : " . $id . "Par l'utilisateur " . auth()->user()->identifiant . " - Erreur : " . $e->getMessage() . " - Requête : " . json_encode($request->all()));
 
             // Redirige vers la vue dashboard avec un message d'erreur
             return redirect()->route('dashboard')->with('error', 'Une erreur est survenue lors de la mise à jour du produit.<br>Veuillez contacter l\'administrateur.');
@@ -113,7 +113,7 @@ class ProduitsController
         $produit = Produit::findOrFail($id);
         $produit->delete();
 
-        Log::info("Produit supprimé avec succès par l'utilisateur ". auth()->user()->name. " : Produit ID : ". $produit->id);
+        Log::info("Produit supprimé avec succès par l'utilisateur ". auth()->user()->identifiant. " : Produit ID : ". $produit->id);
         return redirect()->back()->with('success', 'Le produit a été supprimé avec succès.');
     }
 
@@ -223,7 +223,7 @@ class ProduitsController
             return redirect()->route('dashboard')->with('error', 'Une erreur est survenue lors du transfert du produit.<br>Veuillez contacter l\'administrateur.');
         }
 
-        Log::info("Transfert de produit ID : " . $produit->id . " de la zone ID : " . $produit->zone_stock_id . " vers la zone ID : " . $zoneCibleId . " avec une quantité de : " . $quantiteATransferer . " par l'utilisateur " . auth()->user()->name);
+        Log::info("Transfert de produit ID : " . $produit->id . " de la zone ID : " . $produit->zone_stock_id . " vers la zone ID : " . $zoneCibleId . " avec une quantité de : " . $quantiteATransferer . " par l'utilisateur " . auth()->user()->identifiant);
         return redirect()->route('dashboard')->with('success', 'Transfert effectué.');
     }
 

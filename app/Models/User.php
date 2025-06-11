@@ -62,9 +62,9 @@ class User extends Authenticatable
         return $this->id;
     }
 
-    public function getName()
+    public function getIdentifiant()
     {
-        return $this->name;
+        return $this->identifiant;
     }
 
 

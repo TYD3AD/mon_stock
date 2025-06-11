@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Gestion de l\'antenne') }}
+            {{ __('Gestion des antennes') }}
         </h2>
     </x-slot>
 
@@ -29,7 +29,7 @@
                         <tbody class="text-gray-700 text-sm" x-ref="userTable">
                         @foreach($data['utilisateurs'] as $user)
                             <tr class="border-b hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-3">{{ $user['user']->name }}</td>
+                                <td class="px-6 py-3">{{ $user['user']->identifiant }}</td>
                                 <td class="px-6 py-3">{{ $user['user']->email }}</td>
                                 <td class="px-6 py-3 text-center font-semibold text-green-600">
                                     @if($data['responsable'] && $user['user']->id !== auth()->id())
@@ -74,7 +74,7 @@
                                         @click="ajouterUser(user)"
                                         @mouseenter="highlightedIndex = index"
                                         @mouseleave="highlightedIndex = -1"
-                                        x-text="user.name">
+                                        x-text="user.identifiant">
                                     </li>
                                 </template>
                             </ul>
@@ -99,7 +99,7 @@
                 filterUsers() {
                     const term = this.search.toLowerCase();
                     this.filteredUsers = this.allUsers.filter(user =>
-                        user.name.toLowerCase().includes(term) &&
+                        user.identifiant.toLowerCase().includes(term) &&
                         !this.assignedUserIds.includes(user.id)
                     );
                     this.highlightedIndex = 0;
@@ -147,7 +147,7 @@
                                 const newRow = document.createElement('tr');
                                 newRow.className = 'border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150';
                                 newRow.innerHTML = `
-                            <td class="px-6 py-3 whitespace-nowrap text-gray-900">${user.name}</td>
+                            <td class="px-6 py-3 whitespace-nowrap text-gray-900">${user.identifiant}</td>
                             <td class="px-6 py-3 whitespace-nowrap text-gray-600">${user.email}</td>
                             <td class="px-6 py-3 text-center text-green-600 font-bold text-lg">
                                 ${

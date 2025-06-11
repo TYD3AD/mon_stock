@@ -64,7 +64,7 @@ class GestionAntenneController extends Controller
             ];
         }
 
-        $users = User::all(['id', 'name', 'email']);
+        $users = User::all(['id', 'identifiant', 'email']);
 
         return view('gestion-antenne-store', compact('tableauAntennes', 'users'));
     }

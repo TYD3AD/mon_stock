@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        Log::info("L'utilisateur " . auth()->user()->name . " s'est connecté avec succès.");
+        Log::info("L'utilisateur " . auth()->user()->identifiant . " s'est connecté avec succès.");
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Log::info("L'utilisateur " . auth()->user()->name . " s'est déconnecté.");
+        Log::info("L'utilisateur " . auth()->user()->identifiant . " s'est déconnecté.");
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
