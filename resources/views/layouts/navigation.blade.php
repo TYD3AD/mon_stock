@@ -149,22 +149,22 @@
 </script>
 
 @php
-use App\Models\Antenne;
-use App\Models\ZoneStock;
-use Illuminate\Support\Facades\Auth;
-    // Définit les catégories de zones de stock
-    $pharmacie = 1;
-    $vtu = 2;
-    $vpsp = 3;
-    // Récupère l'utilisateur connecté
-    $user = Auth::user();
-    // Récupère les antennes de l'utilisateur connecté
-    $antennes = auth()->user()->antennes()->get();
-    $antenneP = Antenne::where('id', $user->antenne_id)->first();
-    // retire l'antenne principale de la liste des antennes
-    $antennes = $antennes->where('id', '!=', $user->antenne_id);
-    // récupère les zones de stock des antennes de l'utilisateur
-    $zones = ZoneStock::whereIn('antenne_id', auth()->user()->antennes->pluck('id'))->get();
+    use App\Models\Antenne;
+    use App\Models\ZoneStock;
+    use Illuminate\Support\Facades\Auth;
+        // Définit les catégories de zones de stock
+        $pharmacie = 1;
+        $vtu = 2;
+        $vpsp = 3;
+        // Récupère l'utilisateur connecté
+        $user = Auth::user();
+        // Récupère les antennes de l'utilisateur connecté
+        $antennes = auth()->user()->antennes()->get();
+        $antennePrincipale = Antenne::where('id', $user->antenne_id)->first();
+        // retire l'antenne principale de la liste des antennes
+        $antennes = $antennes->where('id', '!=', $user->antenne_id);
+        // récupère les zones de stock des antennes de l'utilisateur
+        $zones = ZoneStock::whereIn('antenne_id', auth()->user()->antennes->pluck('id'))->get();
 @endphp
 
     <!-- Container nav complet -->
@@ -189,24 +189,24 @@ use Illuminate\Support\Facades\Auth;
 
         <div class="mb-6"> {{-- Added margin-bottom for separation --}}
             <h4 class="text-lg font-semibold border-b-2 border-orange-500 pb-2 mb-2">Antenne
-                de {{$antenneP->nom}}</h4> {{-- Styled heading --}}
-            @if($zones->contains(fn($zone) => $zone->antenne_id === $antenneP->id && $zone->categorie == 1))
+                de {{$antennePrincipale->nom}}</h4> {{-- Styled heading --}}
+            @if($zones->contains(fn($zone) => $zone->antenne_id === $antennePrincipale->id && $zone->categorie == 1))
                 <div>
-                    <a href="{{ route('produits.listAccess', [$antenneP->id, $pharmacie]) }}"
+                    <a href="{{ route('produits.listAccess', [$antennePrincipale->id, $pharmacie]) }}"
                        class="block py-2 px-3 rounded-md text-sm font-medium hover:bg-gray-100 hover:text-orange-500 transition duration-150 ease-in-out">Pharmacie</a> {{-- Button styling --}}
                 </div>
             @endif
-            @if($zones->contains(fn($zone) => $zone->antenne_id === $antenneP->id && $zone->categorie == 2))
+            @if($zones->contains(fn($zone) => $zone->antenne_id === $antennePrincipale->id && $zone->categorie == 2))
                 <div>
-                    <a href="{{ route('produits.listAccess', [$antenneP->id, $vtu]) }}"
+                    <a href="{{ route('produits.listAccess', [$antennePrincipale->id, $vtu]) }}"
                        class="block py-2 px-3 rounded-md text-sm font-medium hover:bg-gray-100 hover:text-orange-500 transition duration-150 ease-in-out">VTU</a> {{-- Button styling --}}
                 </div>
             @endif
-            @if($zones->contains(fn($zone) => $zone->antenne_id === $antenneP->id && $zone->categorie == 3))
-                <?php $vpsps = $zones->where('antenne_id', $antenneP->id)->where('categorie', 3); ?>
+            @if($zones->contains(fn($zone) => $zone->antenne_id === $antennePrincipale->id && $zone->categorie == 3))
+                    <?php $vpsps = $zones->where('antenne_id', $antennePrincipale->id)->where('categorie', 3); ?>
                 @foreach($vpsps as $vps)
                     <div>
-                        <a href="{{ route('produits.listAccess', [$antenneP->id, $vpsp, $vps->id  ]) }}"
+                        <a href="{{ route('produits.listAccess', [$antennePrincipale->id, $vpsp, $vps->id  ]) }}"
                            class="block py-2 px-3 rounded-md text-sm font-medium hover:bg-gray-100 hover:text-orange-500 transition duration-150 ease-in-out">{{ $vps->nom }}</a> {{-- Button styling --}}
                     </div>
                 @endforeach

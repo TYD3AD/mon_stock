@@ -17,7 +17,7 @@ class AccesAntenne extends Model
     protected $fillable = [
         'id_user',
         'id_antenne',
-        // ajoute d'autres colonnes ici si besoin
+        'est_responsable',
     ];
 
     // Relations (facultatif mais recommandé)
@@ -29,5 +29,12 @@ class AccesAntenne extends Model
     public function antenne()
     {
         return $this->belongsTo(Antenne::class, 'id_antenne');
+    }
+
+    public function isResponsable(int $idUser): bool
+    {
+        return $this->where('id_user', $idUser)
+                    ->where('est_responsable', true)
+                    ->exists();
     }
 }

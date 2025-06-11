@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Antenne;
 
 use App\Models\ZoneStock;
+use Hamcrest\Util;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Produit;
 
@@ -12,29 +13,19 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-
         // Récupère les produits de toutes les zones des antennes de l'utilisateur
-        $produits = Produit::whereHas('zoneStock.antenne.accesAntennes', function ($query) {
-            $query->where('id_user', Auth::id());
-        })->with(['zoneStock.antenne.accesAntennes.user'])->get();
+        $produits = UtilsController::getProduitsZones();
 
+        // Récupère l'antenne principale de l'utilisateur
+        $antennePrincipale = UtilsController::getAntennePrincipale();
 
-
-        foreach ($produits as $produit) {
-            $produit ? \Carbon\Carbon::parse($produit->date_peremption)->format('d/m/Y') : '—';
-        }
-
-        $antennes = auth()->user()->antennes()->get();
-        $antenneP = Antenne::where('id', $user->antenne_id)->first();
-
-        // retire l'antenne principale de la liste des antennes
-        $antennes = $antennes->where('id', '!=', $user->antenne_id);
+        // Récupère les antennes de l'utilisateur, en excluant l'antenne principale
+        $antennes = UtilsController::getAntennesUserMoinsAntennePrinciaple();
 
         // récupère les zones de stock des antennes de l'utilisateur
-        $zones = ZoneStock::whereIn('antenne_id', auth()->user()->antennes->pluck('id'))->get();
+        $zones = UtilsController::getZonesAntennes();
 
 
-        return view('dashboard', compact('produits', 'antennes', 'antenneP', 'zones'));
+        return view('dashboard', compact('produits', 'antennes', 'antennePrincipale', 'zones'));
     }
 }

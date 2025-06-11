@@ -18,7 +18,8 @@ class Antenne extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'acces_antenne', 'id_antenne', 'id_user');
+        return $this->belongsToMany(User::class, 'acces_antenne', 'id_antenne', 'id_user')
+            ->withPivot('est_responsable');
     }
 
     public function zones()

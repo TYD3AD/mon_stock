@@ -1,17 +1,15 @@
 <?php
 
+use App\Http\Controllers\AccesAntenneController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GestionAntenneController;
-use App\Http\Controllers\PharmacieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProduitsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-//Route::get('/', function () {
-//    return view('welcome');
-//});
 Route::get('/', [AuthenticatedSessionController::class, 'create'])
     ->name('login');
 
@@ -37,6 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/commandes/store', [CommandeController::class, 'store'])->name('commandes.store');
 
     Route::get('/gestion-antenne/store', [GestionAntenneController::class, 'store'])->name('gestion-antenne.store');
+
+    Route::post('/antennes/{antenne}/utilisateurs', [AccesAntenneController::class, 'ajouterUtilisateur'])->name('antennes.utilisateurs.ajouter');
+    Route::post('/antennes/{antenne}/utilisateurs/{user}/toggle-responsable', [AccesAntenneController::class, 'toggleResponsable'])->name('antennes.utilisateurs.toggle-responsable');
+    Route::post('/antennes/{antenne}/users/{user}/toggle-responsable', [AccesAntenneController::class, 'toggleResponsable']);
+
 
 
 });
