@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="ml-56 p-6 space-y-10">
+    <div class="lg:ml-56 md:ml-56 p-6 space-y-10">
         @foreach($tableauAntennes as $data)
             <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6"
                  x-data="userSelector({{ $data['antenne']->id }}, @json($data['utilisateurs']->pluck('user.id')))">
