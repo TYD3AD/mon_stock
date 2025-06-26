@@ -24,6 +24,7 @@
                             <th class="px-6 py-3 text-left w-2/6">Nom</th>
                             <th class="px-6 py-3 text-left w-3/6">Email</th>
                             <th class="px-6 py-3 text-center w-1/6">Responsable</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody class="text-gray-700 text-sm" x-ref="userTable">
@@ -41,6 +42,26 @@
                                         />
                                     @else
                                         {!! $user['est_responsable'] ? '&#10003;' : '' !!}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($data['responsable'] && $user['user']->id !== auth()->id())
+                                        <div x-data="{ open: false }">
+                                            <button @click="open = true">❌</button>
+
+                                            <div x-show="open" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center;">
+                                                <div @click.outside="open = false" style="background:white; padding:20px; border-radius:8px; min-width:300px;">
+                                                    <form method="POST" action="{{ route('deleteUser', ['antenne' => $data['antenne']->id, 'user' => $user['user']->id]) }}" class="p-2">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <h1>Êtes-vous sûr de vouloir supprimer l'utilisateur ?</h1>
+
+                                                        <button type="submit">Oui</button>
+                                                    </form>
+                                                    <button @click="open = false">Fermer</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endif
                                 </td>
                             </tr>
@@ -203,6 +224,13 @@
             };
         }
     </script>
+
+
+    <!-- HTML avec Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+
+
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </x-app-layout>
