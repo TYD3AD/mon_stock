@@ -30,44 +30,50 @@ class AccesAntenneController extends Controller
         return response()->json($users);
     }
 
-    public function ajouterUtilisateur(Request $request)
+    public function ajouterUtilisateur(Request $request, int $antenneId, int $userId)
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'antenne_id' => 'required|exists:antennes,id',
-        ]);
 
-        $existe = AccesAntenne::where('id_user', $request->user_id)
-            ->where('id_antenne', $request->antenne_id)
-            ->exists();
-
-        if ($existe) {
-            return response()->json(['success' => false, 'message' => 'Utilisateur déjà ajouté.']);
-        }
-
-        AccesAntenne::create([
-            'id_user' => $request->user_id,
-            'id_antenne' => $request->antenne_id,
-            'est_responsable' => false
+        // Validation explicite des paramètres
+        $validatedData = $request->validate([
+            // Rien dans le corps ici, car tout est dans l'URL
         ]);
 
         try {
-            $user = User::find($request->user_id);
+
+            // Vérifier l'existence de l'antenne et de l'utilisateur
+            $antenne = Antenne::where('id', $antenneId)->first();
+            $user = User::find($userId);
+            if (!$antenne || !$user) {
+                Log::error("Antenne ID: {$antenneId} ou Utilisateur ID: {$userId} non trouvé.");
+                return redirect()->with('error', 'Antenne ou utilisateur non trouvé.');
+            }
+
+            $existe = AccesAntenne::where('id_user', $userId)
+                ->where('id_antenne', $antenneId)
+                ->exists();
+
+            if ($existe) {
+                return redirect()->back()->with(['success', 'Utilisateur déjà ajouté.']);
+            }
+
+            AccesAntenne::create([
+                'id_user' => $userId,
+                'id_antenne' => $antenneId,
+                'est_responsable' => false
+            ]);
+
+
             if (!$user) {
-                log::error("Utilisateur ID: {$request->user_id} non trouvé.");
+                log::error("Utilisateur ID: {$userId} non trouvé.");
                 return response()->json(['success' => false, 'message' => 'Utilisateur non trouvé.'], 404);
             }
+
         } catch (\Exception $e) {
-            log::error("Erreur lors de la récupération de l'utilisateur ID: {$request->user_id} - " . $e->getMessage());
+            log::error("Erreur lors de la récupération de l'utilisateur ID: {$userId} - " . $e->getMessage());
         }
 
-        log::info("Utilisateur : {$user->identifiant} (ID: {$user->id}) ajouté à l'antenne ID: {$request->antenne_id}");
-        return response()->json([
-            'success' => true,
-            'user' => $user,
-            'est_responsable' => false,
-            'peut_modifier_responsable' => true // ou selon une logique de permission
-        ]);
+        log::info("Utilisateur : {$user->identifiant} (ID: {$user->id}) ajouté à l'antenne ID: {$antenneId}");
+        return redirect()->back()->with('success', 'Utilisateur ajouté avec succès.');
     }
 
 
