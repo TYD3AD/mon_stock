@@ -24,6 +24,7 @@
                             <th class="px-6 py-3 text-left w-2/6">Nom</th>
                             <th class="px-6 py-3 text-left w-3/6">Email</th>
                             <th class="px-6 py-3 text-center w-1/6">Responsable</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody class="text-gray-700 text-sm" x-ref="userTable">
@@ -43,6 +44,43 @@
                                         {!! $user['est_responsable'] ? '&#10003;' : '' !!}
                                     @endif
                                 </td>
+                                <td>
+                                    @if($data['responsable'] && $user['user']->id !== auth()->id())
+                                        <div x-data="{ open: false }">
+                                            <button @click="open = true">❌</button>
+
+                                            <div x-show="open"
+                                                 x-transition
+                                                 class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+                                                 x-cloak>
+                                                <div @click.outside="open = false"
+                                                     class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md space-y-6 relative">
+
+                                                    <h2 class="text-xl font-semibold text-gray-800">Confirmer la suppression</h2>
+                                                    <p class="text-gray-600">Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.</p>
+
+                                                    <form method="POST"
+                                                          action="{{ route('deleteUser', ['antenne' => $data['antenne']->id, 'user' => $user['user']->id]) }}"
+                                                          class="flex justify-end gap-3">
+                                                        @csrf
+                                                        @method('DELETE')
+
+                                                        <button type="button"
+                                                                @click="open = false"
+                                                                class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                                                            Annuler
+                                                        </button>
+
+                                                        <button type="submit"
+                                                                class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition">
+                                                            Supprimer
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -57,7 +95,9 @@
                             <input type="text"
                                    x-model="search"
                                    @input="filterUsers"
-                                   @keydown="handleKeydown($event)"
+                                   @keydown.enter.prevent="handleKeydown($event)"
+                                   @keydown.arrow-down.prevent="handleKeydown($event)"
+                                   @keydown.arrow-up.prevent="handleKeydown($event)"
                                    placeholder="Tapez le nom..."
                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition duration-150" />
 
@@ -71,10 +111,13 @@
                                             'hover:bg-gray-100': index !== highlightedIndex
                                         }"
                                         class="px-4 py-2 cursor-pointer transition"
-                                        @click="ajouterUser(user)"
                                         @mouseenter="highlightedIndex = index"
                                         @mouseleave="highlightedIndex = -1"
-                                        x-text="user.identifiant">
+                                    >
+                                        <form :x-ref="`userForm_${user.id}`" :action="`/antennes/{{ $data['antenne']->id }}/utilisateurs/${user.id}`" method="POST">
+                                            <input type="hidden" name="_token" :value="csrfToken">
+                                            <button type="submit" class="w-full text-left" x-text="user.identifiant"></button>
+                                        </form>
                                     </li>
                                 </template>
                             </ul>
@@ -95,6 +138,7 @@
                 filteredUsers: [],
                 highlightedIndex: -1,
                 assignedUserIds: assignedUserIds,
+                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
 
                 filterUsers() {
                     const term = this.search.toLowerCase();
@@ -115,8 +159,9 @@
                             this.highlightedIndex--;
                         }
                     } else if (event.key === 'Enter') {
-                        if (this.filteredUsers[this.highlightedIndex]) {
-                            this.ajouterUser(this.filteredUsers[this.highlightedIndex]);
+                        const user = this.filteredUsers[this.highlightedIndex];
+                        if (user && this.$refs[`userForm_${user.id}`]) {
+                            this.$refs[`userForm_${user.id}`].submit();
                         }
                     }
                 },
@@ -161,6 +206,26 @@
                                         : (estResponsable ? '&#10003;' : '')
                                 }
                             </td>
+                            <td>
+                                    @if($data['responsable'] && $user['user']->id !== auth()->id())
+                                        <div x-data="{ open: false }">
+                                            <button @click="open = true">❌</button>
+
+                                            <div x-show="open" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center;">
+                                                <div @click.outside="open = false" style="background:white; padding:20px; border-radius:8px; min-width:300px;">
+                                                    <form method="POST" action="{{ route('deleteUser', ['antenne' => $data['antenne']->id, 'user' => $user['user']->id]) }}" class="p-2">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <h1>Êtes-vous sûr de vouloir supprimer l'utilisateur ?</h1>
+
+                                                        <button type="submit">Oui</button>
+                                                    </form>
+                                                    <button @click="open = false">Fermer</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </td>
                         `;
                                 tbody.appendChild(newRow);
                             } else {
@@ -203,6 +268,13 @@
             };
         }
     </script>
+
+
+    <!-- HTML avec Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+
+
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </x-app-layout>

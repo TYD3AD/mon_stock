@@ -9,7 +9,8 @@ class Antenne extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nom'];
+    protected $fillable = ['id',
+        'nom'];
 
     public function typesProduits()
     {

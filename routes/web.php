@@ -36,9 +36,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/gestion-antenne/store', [GestionAntenneController::class, 'store'])->name('gestion-antenne.store');
 
-    Route::post('/antennes/{antenne}/utilisateurs', [AccesAntenneController::class, 'ajouterUtilisateur'])->name('antennes.utilisateurs.ajouter');
+    Route::post('/antennes/{antenne}/utilisateurs/{user}', [AccesAntenneController::class, 'ajouterUtilisateur'])->name('antennes.utilisateurs.ajouter');
     Route::post('/antennes/{antenne}/utilisateurs/{user}/toggle-responsable', [AccesAntenneController::class, 'toggleResponsable'])->name('antennes.utilisateurs.toggle-responsable');
     Route::post('/antennes/{antenne}/users/{user}/toggle-responsable', [AccesAntenneController::class, 'toggleResponsable']);
+    Route::delete('/antennes/{antenne}/user/{user}/deleteUser',  [AccesAntenneController::class, 'deleteUser'])->name('deleteUser');
 
 
 
