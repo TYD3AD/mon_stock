@@ -47,6 +47,9 @@
         <x-nav-link :href="route('gestion-antenne.store')" :active="request()->routeIs('gestion-antenne.store')">
             {{ __('Gestion antenne') }}
         </x-nav-link>
+        <x-nav-link :href="route('contact.admin')" :active="request()->routeIs('contact.admin')" class="text-red-600">
+            {{ __('Contact administrateur') }}
+        </x-nav-link>
     </div>
 
     <!-- Profil + Hamburger droit -->
@@ -184,6 +187,9 @@
             </x-nav-link>
             <x-nav-link :href="route('gestion-antenne.store')" :active="request()->routeIs('gestion-antenne.store')">
                 {{ __('Gestion antenne') }}
+            </x-nav-link>
+            <x-nav-link :href="route('contact.admin')" :active="request()->routeIs('contact.admin')" class="text-red-600">
+                {{ __('Contact administrateur') }}
             </x-nav-link>
         </div>
 
