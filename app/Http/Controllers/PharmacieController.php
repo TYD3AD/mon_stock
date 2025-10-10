@@ -31,7 +31,10 @@ class PharmacieController extends Controller
 
             $antennes = auth()->user()->antennes()->pluck('nom', 'antennes.id');
 
-            return view('pharmacie', compact('produits', 'antennes'));
+            // récupère les zones de stock des antennes de l'utilisateur
+            $zones = UtilsController::getZonesAntennes();
+
+            return view('pharmacie', compact('produits', 'antennes', 'zones'));
         }
 
     /**
