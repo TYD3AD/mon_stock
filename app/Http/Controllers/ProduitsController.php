@@ -10,12 +10,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Dashboard;
 
+use Illuminate\Validation\Rules\Enum;
 use function PHPSTORM_META\type;
 use function Psy\debug;
 
 class ProduitsController
 {
-
+    public array $statusProduitEnum = ['perime', 'tres_proche', 'proche', 'correcte', 'loin', 'aucune'];
     public function create()
     {
         // récupère toutes les zones de stock liés aux antennes de l'utilisateur
@@ -144,10 +145,13 @@ class ProduitsController
         $antennes = auth()->user()->antennes()->pluck('nom', 'antennes.id');
 
         $categorie = 'Pharmacie';
+        // récupère les zones de stock des antennes de l'utilisateur
+        $zones = UtilsController::getZonesAntennes();
 
         return view('produit-list',
             compact(
                 'produits',
+                'zones',
                 'antennes',
             'categorie'));
     }
@@ -226,5 +230,100 @@ class ProduitsController
         Log::info("Transfert de produit ID : " . $produit->id . " de la zone ID : " . $produit->zone_stock_id . " vers la zone ID : " . $zoneCibleId . " avec une quantité de : " . $quantiteATransferer . " par l'utilisateur " . auth()->user()->identifiant);
         return redirect()->route('dashboard')->with('success', 'Transfert effectué.');
     }
+
+    public function index(Request $request)
+    {
+
+        try {
+            // Chargement de base avec relations
+            $query = Produit::with(['typeProduit', 'zoneStock']);
+
+            // 🔍 Recherche par nom de produit
+            if ($request->filled('search')) {
+                $search = $request->input('search');
+                $query->whereHas('typeProduit', function ($q) use ($search) {
+                    $q->where('nom', 'like', "%{$search}%");
+                });
+            }
+
+            // 🏷️ Filtre par zone de stockage
+            if ($request->filled('zone')) {
+                $zone = $request->input('zone');
+
+                // Validation "soft" (on ne lève pas d’erreur mais on ignore si ID inconnu)
+                if (ZoneStock::where('id', $zone)->exists()) {
+                    $query->where('zone_stock_id', $zone);
+                } else {
+                    Log::warning("Zone inconnue filtrée : $zone");
+                }
+            }
+
+            // 🧪 Filtre sur la date de péremption
+            if ($request->filled('peremption')) {
+                if(!in_array($request->input('peremption'), $this->statusProduitEnum)) {
+                    Log::warning("Filtre de péremption inconnu : ".$request->input('peremption'));
+                    return redirect()->route('produit.index')->with('error', 'Filtre de péremption inconnu.');
+                }
+                $now = now();
+                $filtre = $request->input('peremption');
+
+                switch ($filtre) {
+                    case 'perime':
+                        $query->whereNotNull('date_peremption')
+                            ->where('date_peremption', '<', $now);
+                        break;
+
+                    case 'tres_proche':
+                        $query->whereNotNull('date_peremption')
+                            ->whereBetween('date_peremption', [$now, $now->clone()->addDays(Produit::SEUILS['tres_proche'])]);
+                        break;
+
+                    case 'proche':
+                        $query->whereNotNull('date_peremption')
+                            ->whereBetween('date_peremption', [$now, $now->clone()->addDays(Produit::SEUILS['proche'])]);
+                        break;
+
+                    case 'correcte':
+                        $query->whereNotNull('date_peremption')
+                            ->whereBetween('date_peremption', [$now, $now->clone()->addDays(Produit::SEUILS['correcte'])]);
+                        break;
+
+                    case 'loin':
+                        $query->whereNotNull('date_peremption')
+                            ->whereBetween('date_peremption', [$now, $now->clone()->addDays(Produit::SEUILS['loin'])]);
+                        break;
+
+                    case 'aucune':
+                        $query->whereNull('date_peremption');
+                        break;
+                }
+            }
+
+            // Récupération finale
+            $produits = $query->orderBy('date_peremption', 'asc')->get();
+
+            // récupère les zones de stock des antennes de l'utilisateur
+            $zones = UtilsController::getZonesAntennes();
+
+            // Log utile pour le suivi admin
+            Log::info("Affichage de la liste des produits par ".auth()->user()->identifiant." avec filtres : ".json_encode($request->all()));
+            $antennes = auth()->user()->antennes()->pluck('nom', 'antennes.id');
+            $categorie = 'Pharmacie';
+
+            return view('produit-list',
+                compact(
+                    'produits',
+                    'antennes',
+                    'zones',
+                    'categorie'));
+        }
+        catch (\Exception $e) {
+            dd($e->getMessage());
+            Log::error("Erreur lors du chargement des produits par ".auth()->user()->identifiant." : ".$e->getMessage()." - Filtres : ".json_encode($request->all()));
+
+            return redirect()->route('dashboard')->with('error', "Impossible d'afficher les produits.<br>Veuillez contacter l'administrateur.");
+        }
+    }
+
 
 }
