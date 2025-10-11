@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AccesAntenne;
 use App\Models\Antenne;
 use App\Models\User;
+use App\Models\ZoneStock;
 use DragonCode\Support\Helpers\Boolean;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -140,10 +141,10 @@ class AccesAntenneController extends Controller
             ->first();
         if ($accesAntenne != null) {
             $accesAntenne->delete();
-            Log::info("Utilisateur ID: {$user->id} supprimé de l'antenne ID: {$idAntenne}");
+            Log::info("L'utilisateur {$user->identifiant} a été supprimé de l'antenne ID: {$idAntenne}");
             return back()->with('success', 'Utilisateur supprimé avec succès.');
         } else {
-            Log::error("Accès à l'antenne non trouvé pour l'utilisateur ID: {$user->id} et antenne ID: {$idAntenne}");
+            Log::error("Accès à l'antenne non trouvé pour l'utilisateur : {$user->identifiant} et antenne ID: {$idAntenne}");
             return back()->with('error', 'Accès à l\'antenne non trouvé.');
         }
     }

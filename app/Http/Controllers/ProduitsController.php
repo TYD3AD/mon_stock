@@ -318,7 +318,6 @@ class ProduitsController
                     'categorie'));
         }
         catch (\Exception $e) {
-            dd($e->getMessage());
             Log::error("Erreur lors du chargement des produits par ".auth()->user()->identifiant." : ".$e->getMessage()." - Filtres : ".json_encode($request->all()));
 
             return redirect()->route('dashboard')->with('error', "Impossible d'afficher les produits.<br>Veuillez contacter l'administrateur.");

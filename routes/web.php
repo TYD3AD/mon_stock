@@ -8,6 +8,7 @@ use App\Http\Controllers\GestionAntenneController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProduitsController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ZoneController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create'])
@@ -41,6 +42,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/antennes/{antenne}/utilisateurs/{user}/toggle-responsable', [AccesAntenneController::class, 'toggleResponsable'])->name('antennes.utilisateurs.toggle-responsable');
     Route::post('/antennes/{antenne}/users/{user}/toggle-responsable', [AccesAntenneController::class, 'toggleResponsable']);
     Route::delete('/antennes/{antenne}/user/{user}/deleteUser',  [AccesAntenneController::class, 'deleteUser'])->name('deleteUser');
+
+    Route::post('/gestion-antenne/{antenneId}/add-zone', [ZoneController::class, 'addZone'])->name('addZone');
+    Route::delete('/zone/{zoneId}/deleteZone',  [ZoneController::class, 'deleteZone'])->name('deleteZone');
 
     Route::get('/contact/admin', [ContactController::class, 'contactAdmin'])->name('contact.admin');
     Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
