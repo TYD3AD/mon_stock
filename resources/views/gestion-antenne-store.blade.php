@@ -5,8 +5,8 @@
         </h2>
     </x-slot>
 
-    <div class="lg:ml-56 md:ml-56 p-6 space-y-10">
-        <div class="ml-56 mr-4">
+    <div class="p-4 md:p-6 lg:ml-56 space-y-10">
+    <div class="ml-56 mr-4">
             @if(session('error'))
                 <div class="bg-red-500 text-white p-4 rounded-lg" name="messageError">{!! session('error') !!}</div>
             @elseif(session('success'))
@@ -24,11 +24,11 @@
             </script>
         </div>
         @foreach($tableauAntennes as $data)
-            <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6 flex flex-row"
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6 flex flex-col md:flex-row gap-6"
                  x-data="userSelector({{ $data['antenne']->id }}, @json($data['utilisateurs']->pluck('user.id')))">
 
                 {{--    Gestion utilisateurs    --}}
-                <div class="flex flex-col md:flex-col gap-8 w-1/2 mr-4">
+                <div class="flex flex-col gap-8 w-full md:w-1/2 mr-4">
                     <h3 class="text-2xl font-bold text-gray-900 ">
                         Antenne : <span class="text-orange-600">{{ $data['antenne']->nom }}</span>
                     </h3>
@@ -69,8 +69,8 @@
                         </div>
                     @endif
                     {{-- Partie gauche : tableau des utilisateurs --}}
-                    <div class="flex-1 overflow-x-auto">
-                        <table class="min-w-full table-auto bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                    <div class="flex-1 overflow-x-auto border rounded-lg">
+                        <table class="min-w-full text-sm border-collapse table-auto bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm">
                             <thead class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold tracking-wide">
                             <tr>
                                 <th class="px-6 py-3 text-left w-2/6">Prénom</th>
@@ -143,7 +143,7 @@
                 </div>
                 {{--    Fin gestion utilisateurs    --}}
                 {{--    Gestion des zones    --}}
-                <div class="flex flex-col md:flex-col gap-8 w-1/2">
+                <div class="flex flex-col gap-8 w-full md:w-1/2">
                     {{-- Partie droite : formulaire d’ajout --}}
                     @if($data['responsable'])
                         <form method="POST" action="{{ route('addZone', ['antenneId' => $data['antenne']->id]) }}"
@@ -151,8 +151,8 @@
                             @csrf
                             <div class="w-full md:w-full bg-gray-50 border border-gray-200 rounded-xl shadow p-5 mt-8 md:mt-16">
                                 <h4 class="text-lg font-semibold text-gray-800 mb-3">Ajouter une nouvelle zone de stock</h4>
-                                <div class="flex flex-row">
-                                    <div class="flex-1 mr-4">
+                                <div class="flex flex-col md:flex-row md:items-end gap-4">
+                                    <div class="flex-1">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Nom de la zone</label>
                                         <input type="text"
                                                x-model="nom"
@@ -160,7 +160,7 @@
                                                placeholder="Nom de la zone..."
                                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition duration-150" />
                                     </div>
-                                    <div class="flex-1 mr-4">
+                                    <div class="flex-1">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Type de zone</label>
                                         <select name="type_zone"
                                                 x-model="type_zone"
@@ -174,7 +174,7 @@
                                     </div>
                                     <button type="submit"
                                             :disabled="type_zone === ''"
-                                            class="ml-4 bg-orange-600 text-white px-3 py-0 rounded-lg hover:bg-orange-700 transition"
+                                            class="bg-orange-600 text-white px-5 py-2.5 rounded-lg transition w-full md:w-auto"
                                             :class="type_zone === '' ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'hover:bg-orange-700'">
                                         Ajouter
                                     </button>
@@ -185,24 +185,24 @@
 
                     @endif
                     {{-- Partie gauche : tableau des utilisateurs --}}
-                    <div class="flex-1 overflow-x-auto">
-                        <table class="min-w-full table-auto bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse bg-white rounded-lg shadow-md text-sm">
                             <thead class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold tracking-wide">
                             <tr>
-                                <th class="px-6 py-3 text-left w-5/12">Nom de la zone</th>
-                                <th class="px-6 py-3 text-left w-5/12">Type de zone</th>
-                                <th></th>
+                                <th class="px-6 py-3 text-left min-w-[250px] md:w-7/12">Nom de la zone</th>
+                                <th class="px-6 py-3 text-left min-w-[150px] md:w-3/12">Type de zone</th>
+                                <th class="px-6 py-3 text-center min-w-[100px] md:w-2/12">Actions</th>
                             </tr>
                             </thead>
-                            <tbody class="text-gray-700 text-sm" x-ref="userTable">
+                            <tbody class="text-gray-700 text-sm">
                             @foreach($data['zones'] as $zone)
                                 <tr class="border-b hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-3">{{ $zone->nom }}</td>
                                     <td class="px-6 py-3">{{ $zone->nomTypeZone }}</td>
-                                    <td>
+                                    <td class="px-6 py-3 text-center">
                                         @if($data['responsable'])
                                             <div x-data="{ open: false }" class="flex justify-center">
-                                                <button @click="open = true">❌</button>
+                                                <button @click="open = true" class="text-red-600 hover:text-red-800">❌</button>
 
                                                 <div x-show="open"
                                                      x-transition
@@ -212,20 +212,18 @@
                                                          class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md space-y-6 relative">
 
                                                         <h2 class="text-xl font-semibold text-gray-800">Confirmer la suppression</h2>
-                                                        <p class="text-gray-600">Êtes-vous sûr de vouloir supprimer cette zone ? </br></br> <b>Cette action est irréversible et supprimera également tout produit stocké dans cette zone !</b></p>
+                                                        <p class="text-gray-600">Êtes-vous sûr de vouloir supprimer cette zone ?<br><br><b>Cette action supprimera aussi tout produit stocké dans cette zone.</b></p>
 
                                                         <form method="POST"
                                                               action="{{ route('deleteZone', ['zoneId' => $zone->id]) }}"
                                                               class="flex justify-end gap-3">
                                                             @csrf
                                                             @method('DELETE')
-
                                                             <button type="button"
                                                                     @click="open = false"
                                                                     class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
                                                                 Annuler
                                                             </button>
-
                                                             <button type="submit"
                                                                     class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition">
                                                                 Supprimer
