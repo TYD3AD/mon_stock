@@ -28,26 +28,32 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'login' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
 
-    /**
-     * Attempt to authenticate the request's credentials.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $login = $this->input('login');
+        $password = $this->input('password');
+        $remember = $this->boolean('remember');
+
+        // Si c’est une adresse mail → authentifie via "email"
+        // Sinon → via "identifiant"
+        $credentials = filter_var($login, FILTER_VALIDATE_EMAIL)
+            ? ['email' => $login, 'password' => $password]
+            : ['identifiant' => $login, 'password' => $password];
+
+        if (! Auth::attempt($credentials, $remember)) {
             RateLimiter::hit($this->throttleKey());
 
-            Log::error('Échec de la connexion pour l\'utilisateur : ' . $this->string('email'));
+            Log::error("Échec de la connexion pour : {$login}");
+
             throw ValidationException::withMessages([
-                'email' => trans('email ou mot de passe incorrect'),
+                'login' => trans('Identifiant ou mot de passe incorrect.'),
             ]);
         }
 
