@@ -80,6 +80,30 @@ class UtilsController extends Controller
         return $zones;
     }
 
+    public static function getNomTypeZone($id) : string
+    {
+        $nomTypeZone = "null";
+        switch ($id) {
+            case 1:
+                $nomTypeZone = "Pharmacie";
+                break;
+            case 2:
+                $nomTypeZone = "VTU";
+                break;
+            case 3:
+                $nomTypeZone = "VPSP";
+                break;
+            case 4:
+                $nomTypeZone = "Autre";
+                break;
+            default:
+                $nomTypeZone = "Inconnu";
+                break;
+        }
+
+        return $nomTypeZone;
+    }
+
 
     public static function getProduitsZones()
     {

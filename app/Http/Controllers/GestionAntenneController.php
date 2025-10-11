@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UtilsController;
+use Illuminate\Support\Facades\Log;
 
 class GestionAntenneController extends Controller
 {
@@ -56,15 +57,22 @@ class GestionAntenneController extends Controller
                 ];
             });
 
+            // Récupère toutes les zones des antennes dont l'utilisateur a accès
+            $zones = UtilsController::getZonesAntennes();
+            foreach ($zones as $zone) {
+                $nomTypeZone = UtilsController::getNomTypeZone($zone->categorie);
+                $zone->nomTypeZone = $nomTypeZone;
+            }
+
             // Stocke les infos dans le tableau associatif
             $tableauAntennes[$antenne->id] = [
                 'antenne' => $antenne,
                 'responsable' => $estResponsable,
                 'utilisateurs' => $utilisateurs,
+                'zones' => $zones->where('antenne_id', $antenne->id),
             ];
         }
-
-        $users = User::all(['id', 'identifiant', 'email']);
+        $users = User::all(['id', 'identifiant', 'email', 'nom', 'prenom']);
 
         return view('gestion-antenne-store', compact('tableauAntennes', 'users'));
     }

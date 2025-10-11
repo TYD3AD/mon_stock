@@ -6,88 +6,33 @@
     </x-slot>
 
     <div class="lg:ml-56 md:ml-56 p-6 space-y-10">
+        <div class="ml-56 mr-4">
+            @if(session('error'))
+                <div class="bg-red-500 text-white p-4 rounded-lg" name="messageError">{!! session('error') !!}</div>
+            @elseif(session('success'))
+                <div class="bg-green-500 text-white p-4 rounded-lg" name="messageSuccess">{!! session('success') !!}</div>
+            @endif
+
+            <script>
+                setTimeout(function () {
+                    const errorMessage = document.querySelector('[name="messageError"]');
+                    const successMessage = document.querySelector('[name="messageSuccess"]');
+
+                    if (errorMessage) errorMessage.style.display = 'none';
+                    if (successMessage) successMessage.style.display = 'none';
+                }, 3000);
+            </script>
+        </div>
         @foreach($tableauAntennes as $data)
-            <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6"
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6 flex flex-row"
                  x-data="userSelector({{ $data['antenne']->id }}, @json($data['utilisateurs']->pluck('user.id')))">
 
-                <div class="flex flex-col md:flex-row gap-8">
-
-                {{-- Partie gauche : tableau des utilisateurs --}}
-                <div class="flex-1 overflow-x-auto">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6">
+                {{--    Gestion utilisateurs    --}}
+                <div class="flex flex-col md:flex-col gap-8 w-1/2 mr-4">
+                    <h3 class="text-2xl font-bold text-gray-900 ">
                         Antenne : <span class="text-orange-600">{{ $data['antenne']->nom }}</span>
                     </h3>
-
-                    <table class="min-w-full table-auto bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm">
-                        <thead class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold tracking-wide">
-                        <tr>
-                            <th class="px-6 py-3 text-left w-2/6">Nom</th>
-                            <th class="px-6 py-3 text-left w-3/6">Email</th>
-                            <th class="px-6 py-3 text-center w-1/6">Responsable</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody class="text-gray-700 text-sm" x-ref="userTable">
-                        @foreach($data['utilisateurs'] as $user)
-                            <tr class="border-b hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-3">{{ $user['user']->identifiant }}</td>
-                                <td class="px-6 py-3">{{ $user['user']->email }}</td>
-                                <td class="px-6 py-3 text-center font-semibold text-green-600">
-                                    @if($data['responsable'] && $user['user']->id !== auth()->id())
-                                        <input
-                                            type="checkbox"
-                                            :checked="{{ $user['est_responsable'] ? 'true' : 'false' }}"
-                                            @change="toggleResponsable({{ $user['user']->id }}, $event)"
-                                            class="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500 cursor-pointer"
-                                        />
-                                    @else
-                                        {!! $user['est_responsable'] ? '&#10003;' : '' !!}
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($data['responsable'] && $user['user']->id !== auth()->id())
-                                        <div x-data="{ open: false }">
-                                            <button @click="open = true">❌</button>
-
-                                            <div x-show="open"
-                                                 x-transition
-                                                 class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
-                                                 x-cloak>
-                                                <div @click.outside="open = false"
-                                                     class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md space-y-6 relative">
-
-                                                    <h2 class="text-xl font-semibold text-gray-800">Confirmer la suppression</h2>
-                                                    <p class="text-gray-600">Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.</p>
-
-                                                    <form method="POST"
-                                                          action="{{ route('deleteUser', ['antenne' => $data['antenne']->id, 'user' => $user['user']->id]) }}"
-                                                          class="flex justify-end gap-3">
-                                                        @csrf
-                                                        @method('DELETE')
-
-                                                        <button type="button"
-                                                                @click="open = false"
-                                                                class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
-                                                            Annuler
-                                                        </button>
-
-                                                        <button type="submit"
-                                                                class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition">
-                                                            Supprimer
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                {{-- Partie droite : formulaire d’ajout --}}
+                    {{-- Partie droite : formulaire d’ajout --}}
                     @if($data['responsable'])
                         <div class="w-full md:w-1/3 bg-gray-50 border border-gray-200 rounded-xl shadow p-5 mt-8 md:mt-0">
                             <h4 class="text-lg font-semibold text-gray-800 mb-3">Ajouter un utilisateur</h4>
@@ -116,14 +61,188 @@
                                     >
                                         <form :x-ref="`userForm_${user.id}`" :action="`/antennes/{{ $data['antenne']->id }}/utilisateurs/${user.id}`" method="POST">
                                             <input type="hidden" name="_token" :value="csrfToken">
-                                            <button type="submit" class="w-full text-left" x-text="user.identifiant"></button>
+                                            <button type="submit" class="w-full text-left" x-text="user.prenom + ' ' + user.nom"></button>
                                         </form>
                                     </li>
                                 </template>
                             </ul>
                         </div>
                     @endif
+                    {{-- Partie gauche : tableau des utilisateurs --}}
+                    <div class="flex-1 overflow-x-auto">
+                        <table class="min-w-full table-auto bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                            <thead class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold tracking-wide">
+                            <tr>
+                                <th class="px-6 py-3 text-left w-2/6">Prénom</th>
+                                <th class="px-6 py-3 text-left w-2/6">Nom</th>
+                                <th class="px-6 py-3 text-left w-3/6">Email</th>
+                                <th class="px-6 py-3 text-center w-1/6">Responsable</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-gray-700 text-sm" x-ref="userTable">
+                            @foreach($data['utilisateurs'] as $user)
+                                <tr class="border-b hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-3">{{ $user['user']->prenom }}</td>
+                                    <td class="px-6 py-3">{{ $user['user']->nom }}</td>
+                                    <td class="px-6 py-3">{{ $user['user']->email }}</td>
+                                    <td class="px-6 py-3 text-center font-semibold text-green-600">
+                                        @if($data['responsable'] && $user['user']->id !== auth()->id())
+                                            <input
+                                                type="checkbox"
+                                                :checked="{{ $user['est_responsable'] ? 'true' : 'false' }}"
+                                                @change="toggleResponsable({{ $user['user']->id }}, $event)"
+                                                class="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500 cursor-pointer"
+                                            />
+                                        @else
+                                            {!! $user['est_responsable'] ? '&#10003;' : '' !!}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($data['responsable'] && $user['user']->id !== auth()->id())
+                                            <div x-data="{ open: false }">
+                                                <button @click="open = true">❌</button>
+
+                                                <div x-show="open"
+                                                     x-transition
+                                                     class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+                                                     x-cloak>
+                                                    <div @click.outside="open = false"
+                                                         class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md space-y-6 relative">
+
+                                                        <h2 class="text-xl font-semibold text-gray-800">Confirmer la suppression</h2>
+                                                        <p class="text-gray-600">Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.</p>
+
+                                                        <form method="POST"
+                                                              action="{{ route('deleteUser', ['antenne' => $data['antenne']->id, 'user' => $user['user']->id]) }}"
+                                                              class="flex justify-end gap-3">
+                                                            @csrf
+                                                            @method('DELETE')
+
+                                                            <button type="button"
+                                                                    @click="open = false"
+                                                                    class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                                                                Annuler
+                                                            </button>
+
+                                                            <button type="submit"
+                                                                    class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition">
+                                                                Supprimer
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+                {{--    Fin gestion utilisateurs    --}}
+                {{--    Gestion des zones    --}}
+                <div class="flex flex-col md:flex-col gap-8 w-1/2">
+                    {{-- Partie droite : formulaire d’ajout --}}
+                    @if($data['responsable'])
+                        <form method="POST" action="{{ route('addZone', ['antenneId' => $data['antenne']->id]) }}"
+                              x-data="{ nom: '', type_zone: '' }">
+                            @csrf
+                            <div class="w-full md:w-full bg-gray-50 border border-gray-200 rounded-xl shadow p-5 mt-8 md:mt-16">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-3">Ajouter une nouvelle zone de stock</h4>
+                                <div class="flex flex-row">
+                                    <div class="flex-1 mr-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Nom de la zone</label>
+                                        <input type="text"
+                                               x-model="nom"
+                                               name="nom"
+                                               placeholder="Nom de la zone..."
+                                               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition duration-150" />
+                                    </div>
+                                    <div class="flex-1 mr-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Type de zone</label>
+                                        <select name="type_zone"
+                                                x-model="type_zone"
+                                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition duration-150">
+                                            <option value="">Type de zone</option>
+                                            <option value="1">Pharmacie</option>
+                                            <option value="2">VTU</option>
+                                            <option value="3">VPSP</option>
+                                            <option value="4">Autre</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit"
+                                            :disabled="type_zone === ''"
+                                            class="ml-4 bg-orange-600 text-white px-3 py-0 rounded-lg hover:bg-orange-700 transition"
+                                            :class="type_zone === '' ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'hover:bg-orange-700'">
+                                        Ajouter
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+
+                    @endif
+                    {{-- Partie gauche : tableau des utilisateurs --}}
+                    <div class="flex-1 overflow-x-auto">
+                        <table class="min-w-full table-auto bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                            <thead class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold tracking-wide">
+                            <tr>
+                                <th class="px-6 py-3 text-left w-5/12">Nom de la zone</th>
+                                <th class="px-6 py-3 text-left w-5/12">Type de zone</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-gray-700 text-sm" x-ref="userTable">
+                            @foreach($data['zones'] as $zone)
+                                <tr class="border-b hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-3">{{ $zone->nom }}</td>
+                                    <td class="px-6 py-3">{{ $zone->nomTypeZone }}</td>
+                                    <td>
+                                        @if($data['responsable'])
+                                            <div x-data="{ open: false }" class="flex justify-center">
+                                                <button @click="open = true">❌</button>
+
+                                                <div x-show="open"
+                                                     x-transition
+                                                     class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+                                                     x-cloak>
+                                                    <div @click.outside="open = false"
+                                                         class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md space-y-6 relative">
+
+                                                        <h2 class="text-xl font-semibold text-gray-800">Confirmer la suppression</h2>
+                                                        <p class="text-gray-600">Êtes-vous sûr de vouloir supprimer cette zone ? </br></br> <b>Cette action est irréversible et supprimera également tout produit stocké dans cette zone !</b></p>
+
+                                                        <form method="POST"
+                                                              action="{{ route('deleteZone', ['zoneId' => $zone->id]) }}"
+                                                              class="flex justify-end gap-3">
+                                                            @csrf
+                                                            @method('DELETE')
+
+                                                            <button type="button"
+                                                                    @click="open = false"
+                                                                    class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                                                                Annuler
+                                                            </button>
+
+                                                            <button type="submit"
+                                                                    class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition">
+                                                                Supprimer
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {{--    Fin gestion des zones    --}}
             </div>
         @endforeach
     </div>
