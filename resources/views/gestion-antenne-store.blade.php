@@ -27,12 +27,12 @@
             <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6 flex flex-col md:flex-row gap-6"
                  x-data="userSelector({{ $data['antenne']->id }}, @json($data['utilisateurs']->pluck('user.id')))">
 
-                {{--    Gestion utilisateurs    --}}
+                {{--    GESTION UTILISATEURS    --}}
                 <div class="flex flex-col gap-8 w-full md:w-1/2 mr-4">
                     <h3 class="text-2xl font-bold text-gray-900 ">
                         Antenne : <span class="text-orange-600">{{ $data['antenne']->nom }}</span>
                     </h3>
-                    {{-- Partie droite : formulaire d’ajout --}}
+                    {{-- PARTIE GAUCHE : Formulaire ajout utilisateur --}}
                     @if($data['responsable'])
                         <div class="w-full md:w-1/3 bg-gray-50 border border-gray-200 rounded-xl shadow p-5 mt-8 md:mt-0">
                             <h4 class="text-lg font-semibold text-gray-800 mb-3">Ajouter un utilisateur</h4>
@@ -68,7 +68,7 @@
                             </ul>
                         </div>
                     @endif
-                    {{-- Partie gauche : tableau des utilisateurs --}}
+                    {{-- PARTIE GAUCHE : tableau des utilisateurs --}}
                     <div class="flex-1 overflow-x-auto border rounded-lg">
                         <table class="min-w-full text-sm border-collapse table-auto bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm">
                             <thead class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold tracking-wide">
@@ -141,10 +141,11 @@
                         </table>
                     </div>
                 </div>
-                {{--    Fin gestion utilisateurs    --}}
-                {{--    Gestion des zones    --}}
+                {{--    FIN GESTION UTILISATEURS    --}}
+
+                {{--    GESTION DES ZONES    --}}
                 <div class="flex flex-col gap-8 w-full md:w-1/2">
-                    {{-- Partie droite : formulaire d’ajout --}}
+                    {{-- PARTIE DROITE : formulaire d’ajout de zones --}}
                     @if($data['responsable'])
                         <form method="POST" action="{{ route('addZone', ['antenneId' => $data['antenne']->id]) }}"
                               x-data="{ nom: '', type_zone: '' }">
@@ -184,8 +185,8 @@
 
 
                     @endif
-                    {{-- Partie gauche : tableau des utilisateurs --}}
-                    <div class="overflow-x-auto">
+                    {{-- PARTIE DROITE : tableau des zones --}}
+                    <div class="flex-1 overflow-x-auto border rounded-lg">
                         <table class="w-full border-collapse bg-white rounded-lg shadow-md text-sm">
                             <thead class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold tracking-wide">
                             <tr>
@@ -240,7 +241,7 @@
                         </table>
                     </div>
                 </div>
-                {{--    Fin gestion des zones    --}}
+                {{--    FIN GESTION DES ZONES    --}}
             </div>
         @endforeach
     </div>
