@@ -41,9 +41,9 @@
         <x-nav-link :href="route('produit.create')" :active="request()->routeIs('produit.create')">
             {{ __('Ajout de produits') }}
         </x-nav-link>
-        <x-nav-link :href="route('commandes.store')" :active="request()->routeIs('commandes.store')">
-            {{ __('Gestion des commandes') }}
-        </x-nav-link>
+{{--        <x-nav-link :href="route('commandes.store')" :active="request()->routeIs('commandes.store')">--}}
+{{--            {{ __('Gestion des commandes') }}--}}
+{{--        </x-nav-link>--}}
         <x-nav-link :href="route('gestion-antenne.store')" :active="request()->routeIs('gestion-antenne.store')">
             {{ __('Gestion antenne') }}
         </x-nav-link>
@@ -182,9 +182,9 @@
             <x-nav-link :href="route('produit.create')" :active="request()->routeIs('produit.create')">
                 {{ __('Ajout de produits') }}
             </x-nav-link>
-            <x-nav-link :href="route('commandes.store')" :active="request()->routeIs('commandes.store')">
-                {{ __('Gestion des commandes') }}
-            </x-nav-link>
+{{--            <x-nav-link :href="route('commandes.store')" :active="request()->routeIs('commandes.store')">--}}
+{{--                {{ __('Gestion des commandes') }}--}}
+{{--            </x-nav-link>--}}
             <x-nav-link :href="route('gestion-antenne.store')" :active="request()->routeIs('gestion-antenne.store')">
                 {{ __('Gestion antenne') }}
             </x-nav-link>
