@@ -26,6 +26,7 @@ class User extends Authenticatable
         'identifiant',
         'email',
         'password',
+        'doitChangerPassword',
     ];
 
     /**
@@ -70,6 +71,11 @@ class User extends Authenticatable
     public function getIdentifiant()
     {
         return $this->identifiant;
+    }
+
+    public function getDoitChangerPassword()
+    {
+        return $this->doitChangerPassword;
     }
 
 

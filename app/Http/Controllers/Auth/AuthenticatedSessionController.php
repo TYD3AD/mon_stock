@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -22,15 +23,27 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Handle an incoming authentication request.
+     * @throws ValidationException
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+
         $request->authenticate();
 
         $request->session()->regenerate();
 
         Log::info("L'utilisateur " . auth()->user()->identifiant . " s'est connecté avec succès.");
+
+        // Vérification du champ 'doitChangerPassword'
+        $doitChangerPassword = auth()->user()->getDoitChangerPassword();    // 1 == doit changer mot de passe
+
+        if ($doitChangerPassword === 1) {
+            return redirect()->route('password.edit')
+                ->with('status', 'Vous devez changer votre mot de passe avant de continuer.');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
+
     }
 
     /**

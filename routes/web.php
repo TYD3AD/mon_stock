@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccesAntenneController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GestionAntenneController;
@@ -48,6 +49,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/contact/admin', [ContactController::class, 'contactAdmin'])->name('contact.admin');
     Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+
+    Route::get('/change-password', [ChangePasswordController::class, 'edit'])->name('password.edit');
+    Route::put('/change-password', [ChangePasswordController::class, 'update'])->name('password.change.update');
 
 
 
