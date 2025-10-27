@@ -68,6 +68,23 @@
                                 </select>
                             </div>
 
+                            {{-- Tri --}}
+                            <div class="flex flex-col">
+                                <label for="sort" class="font-semibold text-gray-700 mb-0.5 sm:mb-1 text-xs sm:text-base">
+                                    ↕️ Tri
+                                </label>
+                                <select id="sort" name="sort"
+                                        class="border border-gray-300 rounded-md sm:rounded-lg px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+                                    <option value="">Aucun tri</option>
+                                    <option value="nom_asc" @selected(request('sort') == 'nom_asc')>Nom du produit (A → Z)</option>
+                                    <option value="nom_desc" @selected(request('sort') == 'nom_desc')>Nom du produit (Z → A)</option>
+                                    <option value="zone_asc" @selected(request('sort') == 'zone_asc')>Zone de stockage (A → Z)</option>
+                                    <option value="zone_desc" @selected(request('sort') == 'zone_desc')>Zone de stockage (Z → A)</option>
+                                    <option value="peremption_asc" @selected(request('sort') == 'peremption_asc')>Date de péremption (plus ancienne → plus récente)</option>
+                                    <option value="peremption_desc" @selected(request('sort') == 'peremption_desc')>Date de péremption (plus récente → plus ancienne)</option>
+                                </select>
+                            </div>
+
                             {{-- Bouton --}}
                             <div class="">
                                 <button type="submit"
@@ -75,13 +92,10 @@
                                     🧭 Filtrer
                                 </button>
                             </div>
-
                         </form>
                     </div>
-                    {{-- Fin Section filtres --}}
-
-
                 </div>
+                {{-- Fin Section filtres --}}
                 <div class="py-6 px-4 sm:px-6 lg:px-8">
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white border border-gray-300">
