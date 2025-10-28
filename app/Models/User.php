@@ -27,6 +27,7 @@ class User extends Authenticatable
         'email',
         'password',
         'doitChangerPassword',
+        'antenne_id',
     ];
 
     /**

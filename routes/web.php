@@ -11,6 +11,7 @@ use App\Http\Controllers\ProduitsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ZoneController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create'])
     ->name('login');
@@ -54,6 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/change-password', [ChangePasswordController::class, 'edit'])->name('password.edit');
     Route::put('/change-password', [ChangePasswordController::class, 'update'])->name('password.change.update');
 
+    Route::get('/new', [AdminController::class, 'create']);
+    Route::post('/new', [AdminController::class, 'store'])->name('admin.users.store');
 
 
 
