@@ -6,6 +6,7 @@ use App\Models\Produit;
 use App\Models\TypeProduit;
 use App\Models\ZoneStock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Dashboard;
@@ -235,8 +236,11 @@ class ProduitsController
     {
 
         try {
-            // Chargement de base avec relations
-            $query = Produit::with(['typeProduit', 'zoneStock']);
+            // Récupère les produits dont l'utilisateur a accès via ses antennes et leurs zones de stock
+            $query = Produit::with(['typeProduit', 'zoneStock', 'zoneStock.antenne'])
+                ->whereHas('zoneStock.antenne.accesAntennes', function ($q) {
+                    $q->where('id_user', Auth::id());
+                });
 
             // 🔍 Recherche par nom de produit
             if ($request->filled('search')) {

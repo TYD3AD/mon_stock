@@ -19,7 +19,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
             <div>
                 <a href="/" class="flex items-center *:mx-4">
-                    <img src="img/logo-protec.svg" alt="Logo Protection Civile" class="h-20 w-20">
+                    <img src="/img/logo-protec.svg" alt="Logo Protection Civile" class="h-20 w-20">
                     <h2 class="font-bold text-4xl">Mon Stock</h2>
                 </a>
             </div>
