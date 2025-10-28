@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.updateEmail') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -27,8 +27,7 @@
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
-
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
+            @if (!$user->hasVerifiedEmail())
                 <div>
                     <p class="text-sm mt-2 text-gray-800">
                         {{ __('Votre adresse électronique n\'est pas vérifiée.') }}
@@ -57,7 +56,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600 bg-green-100 p-2 rounded"
-                >{{ __('Sauvegardé.') }}</p>
+                >{{ __('L\'adresse mail a été sauvegardé.') }}</p>
             @endif
         </div>
     </form>
